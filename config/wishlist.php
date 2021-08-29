@@ -10,10 +10,10 @@ return [
     /**
      * Supported drivers:
      * - "array" (only available during the current request lifecycle)
-     * - "context" (uses the cookie driver if a user is not authenticated, otherwise uses the eloquent driver)
      * - "cookie" (persists the user's wishes as a serialized string inside a cookie)
      * - "database" (alias for eloquent)
      * - "eloquent" (persists the users' wishes to the `wishes` table)
+     * - "upgrade" (uses the cookie driver if a user is not authenticated, otherwise uses the eloquent driver)
      */
     'driver' => env('WISHLIST_DRIVER', 'eloquent'),
 

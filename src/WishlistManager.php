@@ -18,15 +18,6 @@ class WishlistManager extends Manager implements Wishlist
         return InMemoryWishlist::make();
     }
 
-    private function createContextDriver(): CookieWishlist|EloquentWishlist
-    {
-        if ($this->container->make('auth')->check()) {
-            return $this->createEloquentDriver();
-        } else {
-            return $this->createCookieDriver();
-        }
-    }
-
     private function createCookieDriver(): CookieWishlist
     {
         return CookieWishlist::make(
@@ -47,6 +38,15 @@ class WishlistManager extends Manager implements Wishlist
             call_user_func($this->container->make('auth')->userResolver())->getAuthIdentifier(),
             $this->config->get('wishlist.eloquent.scope'),
         );
+    }
+
+    private function createUpgradeDriver(): CookieWishlist|EloquentWishlist
+    {
+        if ($this->container->make('auth')->check()) {
+            return $this->createEloquentDriver();
+        } else {
+            return $this->createCookieDriver();
+        }
     }
 
     # region CONTRACT
