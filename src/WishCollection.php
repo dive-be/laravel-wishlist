@@ -10,13 +10,13 @@ use Illuminate\Support\Collection;
 
 class WishCollection extends Collection
 {
-    private bool $hydrated;
+    private bool $loaded;
 
     public function __construct($items = [])
     {
         parent::__construct($items);
 
-        $this->hydrated = $this->isEmpty() || $this->first() instanceof Wish;
+        $this->loaded = $this->isEmpty() || $this->first() instanceof Wish;
     }
 
     public function find(Wishable $wishable): ?Wish
@@ -29,9 +29,9 @@ class WishCollection extends Collection
         return $this->some($this->comparator($wishable));
     }
 
-    public function hydrate(): self
+    public function load(): self
     {
-        if ($this->hydrated) {
+        if ($this->loaded) {
             return $this;
         }
 
@@ -48,7 +48,7 @@ class WishCollection extends Collection
             return Wish::make($wish['id'], $retriever($wish));
         })->all();
 
-        $this->hydrated = true;
+        $this->loaded = true;
 
         return $this;
     }

@@ -37,7 +37,7 @@ class CookieWishlist implements Wishlist
 
     public function all(): WishCollection
     {
-        return $this->wishlist->all()->hydrate();
+        return $this->wishlist->all()->load();
     }
 
     public function count(): int
