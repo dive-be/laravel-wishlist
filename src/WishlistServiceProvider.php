@@ -1,12 +1,12 @@
 <?php
 
-namespace Dive\Skeleton;
+namespace Dive\Wishlist;
 
-use Dive\Skeleton\Commands\SkeletonCommand;
+use Dive\Wishlist\Commands\InstallPackageCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
-class SkeletonServiceProvider extends ServiceProvider
+class WishlistServiceProvider extends ServiceProvider
 {
     public function boot()
     {
@@ -14,27 +14,24 @@ class SkeletonServiceProvider extends ServiceProvider
             $this->registerCommands();
             $this->registerConfig();
             $this->registerMigration();
-            $this->registerViews();
         }
-
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'skeleton');
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/skeleton.php', 'skeleton');
+        $this->mergeConfigFrom(__DIR__.'/../config/wishlist.php', 'wishlist');
     }
 
     private function registerCommands()
     {
         $this->commands([
-            SkeletonCommand::class,
+            InstallPackageCommand::class,
         ]);
     }
 
     private function registerConfig()
     {
-        $config = 'skeleton.php';
+        $config = 'wishlist.php';
 
         $this->publishes([
             __DIR__.'/../config/'.$config => $this->app->configPath($config),
@@ -43,7 +40,7 @@ class SkeletonServiceProvider extends ServiceProvider
 
     private function registerMigration()
     {
-        $migration = 'create_skeleton_table.php';
+        $migration = 'create_wishes_table.php';
         $doesntExist = Collection::make(glob($this->app->databasePath('migrations/*.php')))
             ->every(fn ($filename) => ! str_ends_with($filename, $migration));
 
@@ -55,12 +52,5 @@ class SkeletonServiceProvider extends ServiceProvider
                 $stub => $this->app->databasePath("migrations/{$timestamp}_{$migration}"),
             ], 'migrations');
         }
-    }
-
-    private function registerViews()
-    {
-        $this->publishes([
-            __DIR__.'/../resources/views' => $this->app->basePath('resources/views/vendor/skeleton'),
-        ], 'views');
     }
 }

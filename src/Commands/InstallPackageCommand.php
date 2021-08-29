@@ -1,45 +1,45 @@
 <?php
 
-namespace Dive\Skeleton\Commands;
+namespace Dive\Wishlist\Commands;
 
 use Illuminate\Console\Command;
 
 class InstallPackageCommand extends Command
 {
-    protected $description = 'Install skeleton.';
+    protected $description = 'Install wishlist.';
 
-    protected $signature = 'skeleton:install';
+    protected $signature = 'wishlist:install';
 
     public function handle(): int
     {
         if ($this->isHidden()) {
-            $this->error('🤚  Skeleton is already installed.');
+            $this->error('🤚  Wishlist is already installed.');
 
-            return 1;
+            return self::FAILURE;
         }
 
-        $this->line('🏎  Installing skeleton...');
+        $this->line('🏎  Installing laravel-wishlist...');
         $this->line('📑  Publishing configuration...');
 
         $this->call('vendor:publish', [
-            '--provider' => "Dive\Skeleton\SkeletonServiceProvider",
+            '--provider' => "Dive\Wishlist\WishlistServiceProvider",
             '--tag' => 'config',
         ]);
 
         $this->line('📑  Publishing migration...');
 
         $this->call('vendor:publish', [
-            '--provider' => "Dive\Skeleton\SkeletonServiceProvider",
+            '--provider' => "Dive\Wishlist\WishlistServiceProvider",
             '--tag' => 'migrations',
         ]);
 
-        $this->info('🏁  Skeleton installed successfully!');
+        $this->info('🏁  Wishlist installed successfully!');
 
-        return 0;
+        return self::SUCCESS;
     }
 
     public function isHidden(): bool
     {
-        return file_exists(config_path('skeleton.php'));
+        return file_exists(config_path('wishlist.php'));
     }
 }

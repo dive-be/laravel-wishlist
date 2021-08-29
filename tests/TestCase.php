@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Dive\Skeleton\SkeletonServiceProvider;
+use Dive\Wishlist\WishlistServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -16,7 +16,7 @@ class TestCase extends BaseTestCase
 
     protected function getPackageProviders($app)
     {
-        return [SkeletonServiceProvider::class];
+        return [WishlistServiceProvider::class];
     }
 
     protected function setUpDatabase($app)
@@ -24,7 +24,7 @@ class TestCase extends BaseTestCase
         $app->make('db')->connection()->getSchemaBuilder()->dropAllTables();
 
         /*
-        require_once __DIR__.'/../database/migrations/create_skeleton_table.php.stub';
+        require_once __DIR__.'/../database/migrations/create_laravel_wishlist_table.php.stub';
         (new \CreatePackageTable())->up();
         */
     }

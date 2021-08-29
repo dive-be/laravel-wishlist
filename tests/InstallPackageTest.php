@@ -5,18 +5,18 @@ namespace Tests;
 use function Pest\Laravel\artisan;
 
 afterEach(function () {
-    file_exists(config_path('skeleton.php')) && unlink(config_path('skeleton.php'));
-    array_map('unlink', glob(database_path('migrations/*_create_skeleton_table.php')));
+    file_exists(config_path('laravel-wishlist.php')) && unlink(config_path('laravel-wishlist.php'));
+    array_map('unlink', glob(database_path('migrations/*_create_laravel_wishlist_table.php')));
 });
 
 it('copies the config', function () {
-    artisan('skeleton:install')->execute();
+    artisan('laravel-wishlist:install')->execute();
 
-    expect(file_exists(config_path('skeleton.php')))->toBeTrue();
+    expect(file_exists(config_path('laravel-wishlist.php')))->toBeTrue();
 });
 
 it('copies the migration', function () {
-    artisan('skeleton:install')->execute();
+    artisan('laravel-wishlist:install')->execute();
 
-    expect(glob(database_path('migrations/*_create_skeleton_table.php')))->toHaveCount(1);
+    expect(glob(database_path('migrations/*_create_laravel_wishlist_table.php')))->toHaveCount(1);
 });

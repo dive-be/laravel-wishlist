@@ -1,16 +1,17 @@
 {
-    "name": "dive-be/:package_name",
-    "description": ":package_description",
+    "name": "dive-be/laravel-wishlist",
+    "description": "Manage your users' wishes in a Laravel app",
     "keywords": [
         "dive",
-        ":package_name"
+        "laravel-wishlist",
+        "wishlist"
     ],
-    "homepage": "https://github.com/dive-be/:package_name",
+    "homepage": "https://github.com/dive-be/laravel-wishlist",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
+            "name": "Muhammed Sari",
+            "email": "muhammed@dive.be",
             "homepage": "https://dive.be",
             "role": "Developer"
         }
@@ -34,8 +35,7 @@
             "src/helpers.php"
         ],
         "psr-4": {
-            "Dive\\Skeleton\\": "src",
-            "Dive\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Dive\\Wishlist\\": "src"
         }
     },
     "autoload-dev": {
@@ -54,10 +54,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Dive\\Skeleton\\SkeletonServiceProvider"
+                "Dive\\Wishlist\\WishlistServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "Dive\\Skeleton\\Facades\\Skeleton"
+                "Wishlist": "Dive\\Wishlist\\Facades\\Wishlist"
             }
         }
     },
