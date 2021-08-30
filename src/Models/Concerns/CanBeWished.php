@@ -3,7 +3,7 @@
 namespace Dive\Wishlist\Models\Concerns;
 
 use Dive\Wishlist\Models\Wish;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait CanBeWished
 {
@@ -12,8 +12,8 @@ trait CanBeWished
         return "{$this->getMorphClass()}-{$this->getKey()}";
     }
 
-    public function wish(): BelongsTo
+    public function wish(): MorphOne
     {
-        return $this->belongsTo(Wish::class);
+        return $this->morphOne(Wish::class, 'wishable');
     }
 }
