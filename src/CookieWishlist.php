@@ -65,13 +65,6 @@ class CookieWishlist implements Wishlist
         $this->enqueue(fn () => $this->wishlist->remove($id));
     }
 
-    public function setDomain(string $domain): self
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
     private function enqueue(Closure $callback): mixed
     {
         return tap($callback(), function () {
