@@ -77,7 +77,7 @@ class EloquentWishlist implements Wishlist
     public function remove(int|string|Wishable $id): void
     {
         if ($id instanceof Wishable) {
-            $id->wish()->delete();
+            $id->wish()->where($this->constraints)->delete();
         } else {
             $this->newQuery()->whereKey($id)->delete();
         }
