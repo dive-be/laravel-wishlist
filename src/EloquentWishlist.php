@@ -41,6 +41,7 @@ class EloquentWishlist implements Wishlist
     {
         return $this->remember(fn () => $this
             ->newQuery()
+            ->with('wishable')
             ->get()
             ->map(fn ($model) => Wish::fromModel($model))
             ->pipe(fn ($collection) => WishCollection::make($collection)));
