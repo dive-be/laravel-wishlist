@@ -59,7 +59,7 @@ class EloquentWishlist implements Wishlist
                 ->newQuery()
                 ->toBase()
                 ->get(['wishable_id', 'wishable_type'])
-                ->mapWithKeys(fn ($wish) => [$wish->getWishableKey() => true])
+                ->mapWithKeys(fn ($wish) => ["{$wish->wishable_type}-{$wish->wishable_id}" => true])
                 ->toArray())
         );
     }

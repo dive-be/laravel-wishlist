@@ -13,11 +13,6 @@ class Wish extends Model
 
     protected $guarded = [];
 
-    public function getWishableKey(): string
-    {
-        return "{$this->wishable_type}-{$this->wishable_id()}";
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(config('wishlist.eloquent.user'));
