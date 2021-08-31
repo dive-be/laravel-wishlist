@@ -29,7 +29,12 @@ class WishCollection extends Collection
         return $this->some($this->comparator($wishable));
     }
 
-    public function load(): self
+    public function ids(): self
+    {
+        return $this->map(fn ($wish) => $wish->id());
+    }
+
+    public function loadIfNotLoaded(): self
     {
         if ($this->loaded) {
             return $this;
@@ -51,6 +56,11 @@ class WishCollection extends Collection
         $this->loaded = true;
 
         return $this;
+    }
+
+    public function wishables(): self
+    {
+        return $this->map(fn ($wish) => $wish->wishable());
     }
 
     public function without(Wishable|int|string $id): self
