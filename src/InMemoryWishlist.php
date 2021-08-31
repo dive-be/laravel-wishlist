@@ -24,7 +24,7 @@ class InMemoryWishlist implements Wishlist
             return $wish;
         }
 
-        return tap(new Wish(Str::random(), $wishable), function ($wish) {
+        return tap(Wish::make(Str::random(), $wishable), function ($wish) {
             $this->wishes->push($wish);
         });
     }
@@ -54,8 +54,12 @@ class InMemoryWishlist implements Wishlist
         return $this->wishes->isNotEmpty();
     }
 
-    public function remove(Wishable|int|string $id): void
+    public function remove(Wishable|int|string $id): bool
     {
+        $previous = $this->count();
+
         $this->wishes = $this->wishes->without($id);
+
+        return $previous !== $this->count();
     }
 }

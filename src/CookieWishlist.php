@@ -2,7 +2,6 @@
 
 namespace Dive\Wishlist;
 
-use Closure;
 use Dive\Wishlist\Contracts\Wishable;
 use Dive\Wishlist\Contracts\Wishlist;
 use Dive\Wishlist\Support\Makeable;
@@ -32,7 +31,14 @@ class CookieWishlist implements Wishlist
 
     public function add(Wishable $wishable): Wish
     {
-        return $this->enqueue(fn () => $this->wishlist->add($wishable));
+        $previous = $this->count();
+        $wish = $this->wishlist->add($wishable);
+
+        if ($previous !== $this->count()) {
+            $this->enqueue();
+        }
+
+        return $wish;
     }
 
     public function all(): WishCollection
@@ -60,20 +66,24 @@ class CookieWishlist implements Wishlist
         return $this->wishlist->isNotEmpty();
     }
 
-    public function remove(Wishable|int|string $id): void
+    public function remove(Wishable|int|string $id): bool
     {
-        $this->enqueue(fn () => $this->wishlist->remove($id));
+        $removed = $this->wishlist->remove($id);
+
+        if ($removed) {
+            $this->enqueue();
+        }
+
+        return $removed;
     }
 
-    private function enqueue(Closure $callback): mixed
+    private function enqueue()
     {
-        return tap($callback(), function () {
-            $this->jar->queue($this->jar->make(
-                name: $this->name,
-                value: serialize($this->wishlist->all()),
-                minutes: $this->maxAge,
-                domain: $this->domain
-            ));
-        });
+        $this->jar->queue($this->jar->make(
+            name: $this->name,
+            value: serialize($this->wishlist->all()),
+            minutes: $this->maxAge,
+            domain: $this->domain
+        ));
     }
 }

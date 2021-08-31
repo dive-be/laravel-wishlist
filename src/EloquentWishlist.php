@@ -23,13 +23,10 @@ class EloquentWishlist implements Wishlist
 
     public function add(Wishable $wishable): Wish
     {
-        $wish = $this->newQuery()->where($morphs = [
-            'wishable_type' => $wishable->getMorphClass(),
-            'wishable_id' => $wishable->getKey(),
-        ])->first();
+        $wish = $this->newQuery()->where($columns = $this->morphColumns($wishable))->first();
 
         if (! $wish instanceof Model) {
-            $wish = Model::create(array_merge($this->constraints, $morphs));
+            $wish = Model::create(array_merge($this->constraints, $columns));
 
             $this->markAsDirty();
         }
@@ -75,15 +72,25 @@ class EloquentWishlist implements Wishlist
         return (bool) $this->count();
     }
 
-    public function remove(int|string|Wishable $id): void
+    public function remove(int|string|Wishable $id): bool
     {
-        if ($id instanceof Wishable) {
-            $id->wish()->where($this->constraints)->delete();
-        } else {
-            $this->newQuery()->whereKey($id)->delete();
+        $removed = (bool) $this->newQuery()
+            ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))
+            ->delete();
+
+        if ($removed) {
+            $this->markAsDirty();
         }
 
-        $this->markAsDirty();
+        return $removed;
+    }
+
+    private function morphColumns(Wishable $wishable): array
+    {
+        return [
+            'wishable_type' => $wishable->getMorphClass(),
+            'wishable_id' => $wishable->getKey(),
+        ];
     }
 
     private function newQuery(): Builder

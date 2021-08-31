@@ -19,5 +19,5 @@ interface Wishlist
 
     public function isNotEmpty(): bool;
 
-    public function remove(int|string|Wishable $id): void;
+    public function remove(int|string|Wishable $id): bool;
 }
