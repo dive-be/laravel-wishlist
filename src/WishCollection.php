@@ -4,9 +4,11 @@ namespace Dive\Wishlist;
 
 use Closure;
 use Dive\Wishlist\Contracts\Wishable;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use LogicException;
 
 class WishCollection extends Collection
 {
@@ -32,6 +34,45 @@ class WishCollection extends Collection
     public function ids(): self
     {
         return $this->map(fn ($wish) => $wish->id());
+    }
+
+    public function load(array|string $relations): self
+    {
+        if ($this->isNotEmpty()) {
+            if (is_string($relations)) {
+                $relations = [$relations];
+            }
+
+            $groupedByType = $this->groupBy(fn (Wish $wish) => $wish->wishable()->getMorphClass());
+
+            if (! Arr::isAssoc($relations)) {
+                if ($groupedByType->count() > 1) {
+                    throw new LogicException('You must provide the polymorphic types explicitly.');
+                }
+
+                $relations = [$groupedByType->keys()->first() => $relations];
+            }
+
+            foreach ($relations as $key => $value) {
+                $key = (string) $key;
+
+                if (class_exists($key) && ($morph = array_search($key, Relation::$morphMap))) {
+                    $relations[$morph] = $value;
+
+                    unset($relations[$key]);
+                }
+            }
+
+            $groupedByType->each(function (self $wishes, string $morphType) use ($relations) {
+                if (array_key_exists($morphType, $relations)) {
+                    EloquentCollection::make(
+                        $wishes->map(fn (Wish $wish) => $wish->wishable())->all()
+                    )->load($relations[$morphType]);
+                }
+            });
+        }
+
+        return $this;
     }
 
     public function loadIfNotLoaded(): self
