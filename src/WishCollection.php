@@ -11,13 +11,13 @@ use LogicException;
 
 class WishCollection extends Collection
 {
-    private bool $loaded;
+    private bool $hydrated;
 
     public function __construct($items = [])
     {
         parent::__construct($items);
 
-        $this->loaded = $this->isEmpty() || $this->first() instanceof Wish;
+        $this->hydrated = $this->isEmpty() || $this->first() instanceof Wish;
     }
 
     public function find(Wishable $wishable): ?Wish
@@ -85,9 +85,9 @@ class WishCollection extends Collection
     /**
      * @internal
      */
-    public function loadIfNotLoaded(): self
+    public function hydrate(): self
     {
-        if ($this->loaded) {
+        if ($this->hydrated) {
             return $this;
         }
 
@@ -104,7 +104,7 @@ class WishCollection extends Collection
             return Wish::make($wish['id'], $retriever($wish));
         })->all();
 
-        $this->loaded = true;
+        $this->hydrated = true;
 
         return $this;
     }

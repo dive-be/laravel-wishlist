@@ -98,6 +98,16 @@ it('can eager load without a type-relation map when unambiguous', function () {
     expect($products)->each(fn ($expect) => $expect->wishable()->relationLoaded('variant')->toBeTrue());
 });
 
+it('can replace plain array representations of wishes with a hydrated wish instance', function () {
+    $collection = WishCollection::make($this->collection->map->toArray()->all());
+
+    expect($collection)->each->toBeArray()->toHaveKeys(['id', 'wishable']);
+
+    $collection->hydrate();
+
+    expect($collection)->each->toBeInstanceOf(Wish::class);
+});
+
 it('throws if the eager load is ambiguous', function () {
     $this->collection->load('variant');
 })->throws(LogicException::class);
