@@ -72,6 +72,20 @@ class EloquentWishlist implements Wishlist
         return (bool) $this->count();
     }
 
+    public function merge(WishCollection $wishes): void
+    {
+        $wishMap = $this->all()->keyBy(fn (Wish $wish) => $wish->wishable()->getMorphKey());
+
+        $this->newQuery()->insert(
+            $wishes->reject(function (Wish $wish) use ($wishMap) {
+                return $wishMap->has($wish->wishable()->getMorphKey());
+            })->map(fn (Wish $wish) => [
+                'created_at' => now(),
+                'updated_at' => now(),
+            ] + array_merge($this->morphColumns($wish->wishable()), $this->constraints))->all()
+        );
+    }
+
     public function purge(): int
     {
         return tap($this->newQuery()->delete(), function () {
