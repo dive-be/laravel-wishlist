@@ -13,12 +13,12 @@ class WishlistManager extends Manager implements Wishlist
         return $this->config->get('wishlist.driver');
     }
 
-    private function createArrayDriver(): InMemoryWishlist
+    protected function createArrayDriver(): InMemoryWishlist
     {
         return InMemoryWishlist::make();
     }
 
-    private function createCookieDriver(): CookieWishlist
+    protected function createCookieDriver(): CookieWishlist
     {
         return CookieWishlist::make(
             $this->container->make('cookie'),
@@ -27,12 +27,12 @@ class WishlistManager extends Manager implements Wishlist
         );
     }
 
-    private function createDatabaseDriver(): EloquentWishlist
+    protected function createDatabaseDriver(): EloquentWishlist
     {
         return $this->createEloquentDriver();
     }
 
-    private function createEloquentDriver(): EloquentWishlist
+    protected function createEloquentDriver(): EloquentWishlist
     {
         return EloquentWishlist::make(
             call_user_func($this->container->make('auth')->userResolver())->getAuthIdentifier(),
@@ -40,7 +40,7 @@ class WishlistManager extends Manager implements Wishlist
         );
     }
 
-    private function createUpgradeDriver(): CookieWishlist|EloquentWishlist
+    protected function createUpgradeDriver(): CookieWishlist|EloquentWishlist
     {
         if ($this->container->make('auth')->check()) {
             return $this->createEloquentDriver();
@@ -80,9 +80,14 @@ class WishlistManager extends Manager implements Wishlist
         return $this->driver()->isNotEmpty();
     }
 
-    public function remove(Wishable|int|string $id): void
+    public function purge(): int
     {
-        $this->driver()->remove($id);
+        return $this->driver()->purge();
+    }
+
+    public function remove(Wishable|int|string $id): bool
+    {
+        return $this->driver()->remove($id);
     }
     # endregion
 }
