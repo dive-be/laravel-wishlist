@@ -2,7 +2,6 @@
 
 namespace Dive\Wishlist;
 
-use Closure;
 use Dive\Wishlist\Contracts\Wishable;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -23,12 +22,12 @@ class WishCollection extends Collection
 
     public function find(Wishable $wishable): ?Wish
     {
-        return $this->first($this->comparator($wishable));
+        return $this->first(Comparator::object($wishable));
     }
 
     public function exists(Wishable $wishable): bool
     {
-        return $this->some($this->comparator($wishable));
+        return $this->some(Comparator::object($wishable));
     }
 
     public function ids(): self
@@ -106,21 +105,7 @@ class WishCollection extends Collection
 
     public function without(Wishable|int|string $id): self
     {
-        return $this->reject($this->comparator($id));
-    }
-
-    private function comparator(Wishable|int|string $id): Closure
-    {
-        if (! $id instanceof Wishable) {
-            return fn ($wish) => (is_array($wish) ? $wish['id'] : $wish->id()) === $id;
-        }
-
-        return function ($wish) use ($id) {
-            $type = is_array($wish) ? $wish['wishable']['type'] : $wish->wishable()->getMorphClass();
-            $key = is_array($wish) ? $wish['wishable']['id'] : $wish->wishable()->getKey();
-
-            return $id->getKey() === $key && $id->getMorphClass() === $type;
-        };
+        return $this->reject(Comparator::for($id));
     }
 
     public function __serialize(): array
