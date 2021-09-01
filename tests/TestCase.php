@@ -23,9 +23,8 @@ class TestCase extends BaseTestCase
     {
         $app->make('db')->connection()->getSchemaBuilder()->dropAllTables();
 
-        /*
-        require_once __DIR__.'/../database/migrations/create_laravel_wishlist_table.php.stub';
-        (new \CreatePackageTable())->up();
-        */
+        require_once __DIR__.'/../database/migrations/create_wishes_table.php.stub';
+
+        (new \CreateWishesTable())->up();
     }
 }
