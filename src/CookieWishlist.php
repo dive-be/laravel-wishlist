@@ -12,7 +12,7 @@ class CookieWishlist implements Wishlist
 {
     use Makeable;
 
-    private string $domain;
+    private ?string $domain;
 
     private int $maxAge;
 
