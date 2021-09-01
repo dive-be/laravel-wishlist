@@ -3,6 +3,7 @@
 namespace Dive\Wishlist;
 
 use Dive\Wishlist\Commands\InstallPackageCommand;
+use Dive\Wishlist\Contracts\Wishlist;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +21,10 @@ class WishlistServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/wishlist.php', 'wishlist');
+
+        $this->app->singleton(WishlistManager::class);
+        $this->app->alias(WishlistManager::class, Wishlist::class);
+        $this->app->alias(WishlistManager::class, 'wishlist');
     }
 
     private function registerCommands()
