@@ -100,6 +100,9 @@ class EloquentWishlist implements Wishlist
         ];
     }
 
+    /**
+     * @return Builder<Model>
+     */
     private function newQuery(): Builder
     {
         return Model::query()->where($this->constraints);
