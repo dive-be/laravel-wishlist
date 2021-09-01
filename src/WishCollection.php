@@ -30,9 +30,17 @@ class WishCollection extends Collection
         return $this->some(Comparator::object($wishable));
     }
 
-    public function ids(): self
+    /**
+     * @return Collection<string, WishCollection>
+     */
+    public function groupByType(): Collection
     {
-        return $this->map(fn ($wish) => $wish->id());
+        return $this->groupBy(fn (Wish $wish) => $wish->wishable()->getMorphClass())->toBase();
+    }
+
+    public function ids(): Collection
+    {
+        return $this->map(fn ($wish) => $wish->id())->toBase();
     }
 
     public function load(array|string $relations): self
@@ -55,7 +63,7 @@ class WishCollection extends Collection
             foreach ($relations as $key => $value) {
                 $key = (string) $key;
 
-                if (class_exists($key) && ($morph = array_search($key, Relation::$morphMap))) {
+                if ($morph = $this->morphType($key)) {
                     $relations[$morph] = $value;
 
                     unset($relations[$key]);
@@ -74,6 +82,9 @@ class WishCollection extends Collection
         return $this;
     }
 
+    /**
+     * @internal
+     */
     public function loadIfNotLoaded(): self
     {
         if ($this->loaded) {
@@ -98,9 +109,18 @@ class WishCollection extends Collection
         return $this;
     }
 
-    public function wishables(): self
+    public function ofType(string $type): self
     {
-        return $this->map(fn ($wish) => $wish->wishable());
+        if ($morph = $this->morphType($type)) {
+            $type = $morph;
+        }
+
+        return $this->filter(fn (Wish $wish) => $wish->wishable()->getMorphClass() === $type);
+    }
+
+    public function wishables(): Collection
+    {
+        return $this->map(fn (Wish $wish) => $wish->wishable())->toBase();
     }
 
     public function without(Wishable|int|string $id): self
@@ -108,13 +128,28 @@ class WishCollection extends Collection
         return $this->reject(Comparator::for($id));
     }
 
+    private function morphType(string $value): ?string
+    {
+        if (! class_exists($value)) {
+            return null;
+        }
+
+        $morphMap = Relation::morphMap();
+
+        if (empty($morphMap) || ! in_array($value, $morphMap)) {
+            return null;
+        }
+
+        return array_search($value, $morphMap, true);
+    }
+
     public function __serialize(): array
     {
-        return $this->map(fn ($wish) => json_encode($wish))->toArray();
+        return $this->map(fn (array|Wish $wish) => json_encode($wish))->toArray();
     }
 
     public function __unserialize(array $data): void
     {
-        $this->items = array_map(fn ($wish) => json_decode($wish, true), $data);
+        $this->items = array_map(fn (string $wish) => json_decode($wish, true), $data);
     }
 }
