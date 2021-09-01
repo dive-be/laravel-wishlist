@@ -72,6 +72,13 @@ class EloquentWishlist implements Wishlist
         return (bool) $this->count();
     }
 
+    public function purge(): int
+    {
+        return tap($this->newQuery()->delete(), function () {
+            $this->markAsDirty();
+        });
+    }
+
     public function remove(int|string|Wishable $id): bool
     {
         $removed = (bool) $this->newQuery()

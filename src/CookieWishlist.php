@@ -32,13 +32,12 @@ class CookieWishlist implements Wishlist
     public function add(Wishable $wishable): Wish
     {
         $previous = $this->count();
-        $wish = $this->wishlist->add($wishable);
 
-        if ($previous !== $this->count()) {
-            $this->enqueue();
-        }
-
-        return $wish;
+        return tap($this->wishlist->add($wishable), function () use ($previous) {
+            if ($previous !== $this->count()) {
+                $this->enqueue();
+            }
+        });
     }
 
     public function all(): WishCollection
@@ -66,15 +65,20 @@ class CookieWishlist implements Wishlist
         return $this->wishlist->isNotEmpty();
     }
 
+    public function purge(): int
+    {
+        return tap($this->wishlist->purge(), function () {
+            $this->forget();
+        });
+    }
+
     public function remove(Wishable|int|string $id): bool
     {
-        $removed = $this->wishlist->remove($id);
-
-        if ($removed) {
-            $this->enqueue();
-        }
-
-        return $removed;
+        return tap($this->wishlist->remove($id), function (bool $removed) {
+            if ($removed) {
+                $this->enqueue();
+            }
+        });
     }
 
     private function enqueue()
@@ -85,5 +89,12 @@ class CookieWishlist implements Wishlist
             minutes: $this->maxAge,
             domain: $this->domain
         ));
+    }
+
+    private function forget()
+    {
+        $this->jar->queue(
+            $this->jar->forget(name: $this->name, domain: $this->domain)
+        );
     }
 }

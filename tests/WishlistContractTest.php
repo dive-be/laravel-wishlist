@@ -70,6 +70,18 @@ it('can determine if a wishable has already been wished for', function (Wishlist
     expect($wishlist->has($wishable))->toBeTrue();
 })->with('wishlists');
 
+it('can be purged', function (Wishlist $wishlist) {
+    $wishlist->add(wishable());
+    $wishlist->add(wishable());
+
+    expect($wishlist->count())->toBe(2);
+
+    $purged = $wishlist->purge();
+
+    expect($wishlist->count())->toBe(0);
+    expect($purged)->toBe(2);
+})->with('wishlists');
+
 it('can remove a wish', function (Wishlist $wishlist, Closure $valueRetriever) {
     $wish = $wishlist->add(wishable());
 

@@ -19,5 +19,7 @@ interface Wishlist
 
     public function isNotEmpty(): bool;
 
+    public function purge(): int;
+
     public function remove(int|string|Wishable $id): bool;
 }

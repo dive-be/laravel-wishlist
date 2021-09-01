@@ -54,6 +54,13 @@ class InMemoryWishlist implements Wishlist
         return $this->wishes->isNotEmpty();
     }
 
+    public function purge(): int
+    {
+        return tap($this->count(), function () {
+            $this->wishes = WishCollection::make();
+        });
+    }
+
     public function remove(Wishable|int|string $id): bool
     {
         $previous = $this->count();

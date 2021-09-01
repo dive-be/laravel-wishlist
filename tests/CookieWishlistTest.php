@@ -33,7 +33,8 @@ it('enqueues a new cookie when modifications happen', function () {
 
     $wishlist->add($wishable = wishable());
 
-    expect($this->jar->getQueuedCookies())->toHaveCount(1);
+    expect($cookies = $this->jar->getQueuedCookies())->toHaveCount(1);
+    expect($cookies[0]->getExpiresTime())->toBeGreaterThan(time());
 
     $this->jar->flushQueuedCookies();
 
@@ -46,12 +47,24 @@ it('enqueues a new cookie when modifications happen', function () {
     $wishlist->remove($wishable);
 
     expect($this->jar->getQueuedCookies())->toHaveCount(1);
+    expect($cookies[0]->getExpiresTime())->toBeGreaterThan(time());
 
     $this->jar->flushQueuedCookies();
 
     $wishlist->remove($wishable);
 
     expect($this->jar->getQueuedCookies())->toHaveCount(0);
+});
+
+it('forgets the cookie when a purge takes place', function () {
+    $wishlist = wishlist([Wish::make(1, wishable())]);
+
+    expect($this->jar->getQueuedCookies())->toHaveCount(0);
+
+    $wishlist->purge();
+
+    expect($cookies = $this->jar->getQueuedCookies())->toHaveCount(1);
+    expect($cookies[0]->getExpiresTime())->toBeLessThan(time());
 });
 
 function wishlist(array $state = []): CookieWishlist
