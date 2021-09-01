@@ -22,7 +22,21 @@ class WishCollection extends Collection
 
     public function find(Wishable $wishable): ?Wish
     {
-        return $this->first(Comparator::object($wishable));
+        $index = $this->search(Comparator::object($wishable));
+
+        if ($index === false) {
+            return null;
+        }
+
+        $wish = $this->get($index);
+
+        if (is_array($wish)) {
+            $wish = Wish::make($wish['id'], $wishable);
+
+            $this->items = $this->replace([$index => $wish])->all();
+        }
+
+        return $wish;
     }
 
     public function exists(Wishable $wishable): bool
@@ -91,18 +105,26 @@ class WishCollection extends Collection
             return $this;
         }
 
-        $models = $this->groupBy('wishable.type')->map(function (self $wishes) {
-            return $wishes->map(fn (array $wish) => Arr::get($wish, 'wishable.id'))->all();
-        })->map(fn (array $ids, string $morphType) => call_user_func([
-            Relation::getMorphedModel($morphType) ?? $morphType,
-            'findMany',
-        ], $ids)->keyBy('id'));
+        $wishes = $this->reject(fn ($wish) => $wish instanceof Wish);
 
-        $this->items = $this->filter($retriever = function (array $wish) use ($models) {
-            return $models->get(Arr::get($wish, 'wishable.type'))->get(Arr::get($wish, 'wishable.id'));
-        })->map(function (array $wish) use ($retriever) {
-            return Wish::make($wish['id'], $retriever($wish));
-        })->all();
+        if ($wishes->isNotEmpty()) {
+            $models = $wishes->groupBy('wishable.type')->map(function (self $wishes) {
+                return $wishes->map(fn (array $wish) => Arr::get($wish, 'wishable.id'))->all();
+            })->map(function (array $ids, string $morphType) {
+                return call_user_func([$this->morphModel($morphType), 'findMany'], $ids)->keyBy('id');
+            });
+
+            $this->transform(function (array|Wish $wish) use ($models) {
+                if ($wish instanceof Wish) {
+                    return $wish;
+                }
+
+                return Wish::make(
+                    $wish['id'],
+                    $models->get(Arr::get($wish, 'wishable.type'))->get(Arr::get($wish, 'wishable.id')),
+                );
+            });
+        }
 
         $this->hydrated = true;
 
@@ -126,6 +148,11 @@ class WishCollection extends Collection
     public function without(Wishable|int|string $id): self
     {
         return $this->reject(Comparator::for($id));
+    }
+
+    private function morphModel(string $type): string
+    {
+        return Relation::getMorphedModel($type) ?? $type;
     }
 
     private function morphType(string $value): ?string
