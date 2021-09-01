@@ -44,12 +44,12 @@ class WishlistManager extends Manager implements Wishlist
     {
         if ($this->container->make('auth')->check()) {
             return $this->createEloquentDriver();
-        } else {
-            return $this->createCookieDriver();
         }
+
+        return $this->createCookieDriver();
     }
 
-    # region CONTRACT
+    // region CONTRACT
     public function add(Wishable $wishable): Wish
     {
         return $this->driver()->add($wishable);
@@ -89,5 +89,6 @@ class WishlistManager extends Manager implements Wishlist
     {
         return $this->driver()->remove($id);
     }
-    # endregion
+
+    // endregion
 }
