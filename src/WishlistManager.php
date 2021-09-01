@@ -8,6 +8,12 @@ use Illuminate\Support\Manager;
 
 class WishlistManager extends Manager implements Wishlist
 {
+    public const ARRAY = 'array';
+    public const COOKIE = 'cookie';
+    public const DATABASE = 'database';
+    public const ELOQUENT = 'eloquent';
+    public const UPGRADE = 'upgrade';
+
     public function getDefaultDriver()
     {
         return $this->config->get('wishlist.driver');
