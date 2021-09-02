@@ -2,6 +2,7 @@
 
 namespace Dive\Wishlist\Facades;
 
+use Dive\Wishlist\InMemoryWishlist;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -18,6 +19,13 @@ use Illuminate\Support\Facades\Facade;
  */
 class Wishlist extends Facade
 {
+    public static function fake(): InMemoryWishlist
+    {
+        static::swap($fake = InMemoryWishlist::make());
+
+        return $fake;
+    }
+
     protected static function getFacadeAccessor()
     {
         return 'wishlist';
