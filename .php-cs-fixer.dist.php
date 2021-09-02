@@ -15,6 +15,7 @@ $dive = [
     'binary_operator_spaces' => [
         'operators' => ['|' => null],
     ],
+    'blank_line_after_opening_tag' => false,
     'blank_line_before_statement' => [
         'statements' => [
             'continue',
@@ -28,6 +29,7 @@ $dive = [
     'constant_case' => ['case' => 'lower'],
     'increment_style' => ['style' => 'post'],
     'is_null' => false,
+    'linebreak_after_opening_tag' => false,
     'method_argument_space' => [
         'on_multiline' => 'ensure_fully_multiline',
         'keep_multiple_spaces_after_comma' => true,
