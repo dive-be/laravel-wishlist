@@ -84,6 +84,8 @@ class EloquentWishlist implements Wishlist
                 'updated_at' => now(),
             ] + array_merge($this->morphColumns($wish->wishable()), $this->constraints))->all()
         );
+
+        $this->markAsDirty();
     }
 
     public function purge(): int
