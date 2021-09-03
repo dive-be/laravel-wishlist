@@ -28,10 +28,10 @@ it('is jsonable', function () {
 });
 
 it('can retrieve the wish id', function () {
-    expect($this->wish->id())->toBe(1337);
+    expect($this->wish->id)->toBe(1337);
 });
 
 it('can retrieve the wishable', function () {
-    expect($this->wish->wishable())->toBeInstanceOf(Product::class);
-    expect($this->wish->wishable()->getKey())->toBe(9876);
+    expect($this->wish->wishable)->toBeInstanceOf(Product::class);
+    expect($this->wish->wishable->getKey())->toBe(9876);
 });

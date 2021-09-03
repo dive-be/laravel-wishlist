@@ -20,8 +20,8 @@ beforeEach(function () {
 it('can find a wish using a wishable', function () {
     expect($this->collection->find($this->wishable))
         ->toBeInstanceOf(Wish::class)
-        ->wishable()->toBeInstanceOf(Sample::class)
-        ->id()->toBe(2);
+        ->wishable->toBeInstanceOf(Sample::class)
+        ->id->toBe(2);
 });
 
 it('can determine existence using a wishable', function () {
@@ -39,7 +39,7 @@ it('can retrieve the with ids', function () {
     expect($this->collection->ids())
         ->toBeInstanceOf(Collection::class)
         ->not->toBeInstanceOf(WishCollection::class)
-        ->toMatchArray($this->collection->map->id());
+        ->toMatchArray($this->collection->map->id);
 });
 
 it('can retrieve the wishables', function () {
@@ -48,7 +48,7 @@ it('can retrieve the wishables', function () {
         ->not->toBeInstanceOf(WishCollection::class);
 
     $wishables->each(function ($wishable, $idx) {
-        expect($wishable->is($this->collection->get($idx)->wishable()))->toBeTrue();
+        expect($wishable->is($this->collection->get($idx)->wishable))->toBeTrue();
     });
 });
 
@@ -64,7 +64,7 @@ it('can retrieve wishes of a single morph type', function (string $morphType, in
     expect($this->collection->ofType($morphType))
         ->toBeInstanceOf(WishCollection::class)
         ->toHaveCount($count)
-        ->each(fn ($expect) => $expect->wishable()->toBeInstanceOf($type));
+        ->each(fn ($expect) => $expect->wishable->toBeInstanceOf($type));
 })->with([
     [Product::class, 2, Product::class],
     ['product', 2, Product::class],
@@ -76,26 +76,26 @@ it('can eager load the relations of wishables', function () {
     $products = $this->collection->ofType(Product::class);
     $samples = $this->collection->ofType(Sample::class);
 
-    expect($products)->each(fn ($expect) => $expect->wishable()->relationLoaded('variant')->toBeFalse());
-    expect($samples)->each(fn ($expect) => $expect->wishable()->relationLoaded('purveyor')->toBeFalse());
+    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeFalse());
+    expect($samples)->each(fn ($expect) => $expect->wishable->relationLoaded('purveyor')->toBeFalse());
 
     $this->collection->load([
         Product::class => 'variant',
         Sample::class => 'purveyor',
     ]);
 
-    expect($products)->each(fn ($expect) => $expect->wishable()->relationLoaded('variant')->toBeTrue());
-    expect($samples)->each(fn ($expect) => $expect->wishable()->relationLoaded('purveyor')->toBeTrue());
+    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeTrue());
+    expect($samples)->each(fn ($expect) => $expect->wishable->relationLoaded('purveyor')->toBeTrue());
 });
 
 it('can eager load without a type-relation map when unambiguous', function () {
     $products = $this->collection->ofType(Product::class);
 
-    expect($products)->each(fn ($expect) => $expect->wishable()->relationLoaded('variant')->toBeFalse());
+    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeFalse());
 
     $products->load('variant');
 
-    expect($products)->each(fn ($expect) => $expect->wishable()->relationLoaded('variant')->toBeTrue());
+    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeTrue());
 });
 
 it('can replace plain array representations of wishes with a hydrated wish instance', function () {

@@ -19,16 +19,16 @@ it('can add a new wish', function (Wishlist $wishlist) {
 
     expect($wishlist->isNotEmpty())->toBeTrue();
     expect($wish)->toBeInstanceOf(Wish::class);
-    expect($wish->id())->not->toBeNull();
-    expect($wish->wishable()->getKey())->toBe($wishable->getKey());
-    expect($wish->wishable()->getMorphClass())->toBe($wishable->getMorphClass());
+    expect($wish->id)->not->toBeNull();
+    expect($wish->wishable->getKey())->toBe($wishable->getKey());
+    expect($wish->wishable->getMorphClass())->toBe($wishable->getMorphClass());
 })->with('wishlists');
 
 it('does not create a new wish if it already exists', function (Wishlist $wishlist) {
     $wishA = $wishlist->add(wishable());
-    $wishB = $wishlist->add($wishA->wishable());
+    $wishB = $wishlist->add($wishA->wishable);
 
-    expect($wishB->id())->toBe($wishA->id());
+    expect($wishB->id)->toBe($wishA->id);
 })->with('wishlists');
 
 it('can retrieve all wishes', function (Wishlist $wishlist) {
@@ -39,8 +39,8 @@ it('can retrieve all wishes', function (Wishlist $wishlist) {
     ]);
 
     $wishlist->all()->each(static function (Wish $wish, int $idx) use ($wishes) {
-        expect($wish->id())->toBe($wishes->get($idx)->id());
-        expect($wish->wishable()->getKey())->toBe($wishes->get($idx)->wishable()->getKey());
+        expect($wish->id)->toBe($wishes->get($idx)->id);
+        expect($wish->wishable->getKey())->toBe($wishes->get($idx)->wishable->getKey());
     });
 })->with('wishlists');
 
@@ -92,8 +92,8 @@ it('can remove a wish', function (Wishlist $wishlist, Closure $valueRetriever) {
     expect($resultB)->toBeFalse();
     expect($wishlist->isEmpty())->toBeTrue();
 })->with('wishlists')->with([
-    fn () => fn ($wish) => $wish->id(),
-    fn () => fn ($wish) => $wish->wishable(),
+    fn () => fn ($wish) => $wish->id,
+    fn () => fn ($wish) => $wish->wishable,
 ]);
 
 dataset('wishlists', [

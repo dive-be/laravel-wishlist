@@ -23,15 +23,15 @@ class EloquentWishlist implements Wishlist
 
     public function add(Wishable $wishable): Wish
     {
-        $wish = $this->newQuery()->where($columns = $this->morphColumns($wishable))->first();
+        $model = $this->newQuery()->where($columns = $this->morphColumns($wishable))->first();
 
-        if (! $wish instanceof Model) {
-            $wish = Model::create(array_merge($this->constraints, $columns));
+        if (! $model instanceof Model) {
+            $model = Model::create(array_merge($this->constraints, $columns));
 
             $this->markAsDirty();
         }
 
-        return Wish::fromModel($wish);
+        return Wish::of($model);
     }
 
     public function all(): WishCollection
@@ -40,7 +40,7 @@ class EloquentWishlist implements Wishlist
             ->newQuery()
             ->with('wishable')
             ->get()
-            ->map(fn ($model) => Wish::fromModel($model))
+            ->map(fn ($model) => Wish::of($model))
             ->pipe(fn ($collection) => WishCollection::make($collection)));
     }
 
@@ -74,15 +74,15 @@ class EloquentWishlist implements Wishlist
 
     public function merge(WishCollection $wishes): void
     {
-        $wishMap = $this->all()->keyBy(fn (Wish $wish) => $wish->wishable()->getMorphKey());
+        $wishMap = $this->all()->keyBy(fn (Wish $wish) => $wish->wishable->getMorphKey());
 
         $this->newQuery()->insert(
             $wishes->reject(function (Wish $wish) use ($wishMap) {
-                return $wishMap->has($wish->wishable()->getMorphKey());
+                return $wishMap->has($wish->wishable->getMorphKey());
             })->map(fn (Wish $wish) => [
                 'created_at' => now(),
                 'updated_at' => now(),
-            ] + array_merge($this->morphColumns($wish->wishable()), $this->constraints))->all()
+            ] + array_merge($this->morphColumns($wish->wishable), $this->constraints))->all()
         );
 
         $this->markAsDirty();

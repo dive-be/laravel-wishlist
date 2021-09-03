@@ -5,32 +5,29 @@ namespace Dive\Wishlist;
 use Dive\Wishlist\Contracts\Wishable;
 use Dive\Wishlist\Models\Wish as Model;
 use Dive\Wishlist\Support\Makeable;
+use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
 
+/**
+ * @property int|string $id
+ * @property Wishable   $wishable
+ */
 class Wish implements Arrayable, Jsonable, JsonSerializable
 {
     use Makeable;
 
-    public function __construct(
-        private int|string $id,
-        private Wishable $wishable,
-    ) {}
+    private array $attributes;
 
-    public static function fromModel(Model $wish): self
+    public function __construct(int|string $id, Wishable $wishable)
     {
-        return self::make($wish->getKey(), $wish->wishable);
+        $this->attributes = compact('id', 'wishable');
     }
 
-    public function id(): int|string
+    public static function of(Model $model): self
     {
-        return $this->id;
-    }
-
-    public function wishable(): Wishable
-    {
-        return $this->wishable;
+        return new self($model->getKey(), $model->getRelationValue('wishable'));
     }
 
     public function toArray()
@@ -52,5 +49,16 @@ class Wish implements Arrayable, Jsonable, JsonSerializable
     public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
+    }
+
+    public function __get(string $name)
+    {
+        if (! array_key_exists($name, $this->attributes)) {
+            $class = static::class;
+
+            throw new Exception("Undefined property: {$class}::{$name}");
+        }
+
+        return $this->attributes[$name];
     }
 }

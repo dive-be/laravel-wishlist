@@ -49,12 +49,12 @@ class WishCollection extends Collection
      */
     public function groupByType(): Collection
     {
-        return $this->groupBy(fn (Wish $wish) => $wish->wishable()->getMorphClass())->toBase();
+        return $this->groupBy(fn (Wish $wish) => $wish->wishable->getMorphClass())->toBase();
     }
 
     public function ids(): Collection
     {
-        return $this->map(fn ($wish) => $wish->id())->toBase();
+        return $this->map(fn (Wish $wish) => $wish->id)->toBase();
     }
 
     public function load(array|string $relations): self
@@ -64,7 +64,7 @@ class WishCollection extends Collection
                 $relations = [$relations];
             }
 
-            $groupedByType = $this->groupBy(fn (Wish $wish) => $wish->wishable()->getMorphClass());
+            $groupedByType = $this->groupByType();
 
             if (! Arr::isAssoc($relations)) {
                 if ($groupedByType->count() > 1) {
@@ -87,7 +87,7 @@ class WishCollection extends Collection
             $groupedByType->each(function (self $wishes, string $morphType) use ($relations) {
                 if (array_key_exists($morphType, $relations)) {
                     EloquentCollection::make(
-                        $wishes->map(fn (Wish $wish) => $wish->wishable())->all()
+                        $wishes->map(fn (Wish $wish) => $wish->wishable)->all()
                     )->load($relations[$morphType]);
                 }
             });
@@ -137,12 +137,12 @@ class WishCollection extends Collection
             $type = $morph;
         }
 
-        return $this->filter(fn (Wish $wish) => $wish->wishable()->getMorphClass() === $type);
+        return $this->filter(fn (Wish $wish) => $wish->wishable->getMorphClass() === $type);
     }
 
     public function wishables(): Collection
     {
-        return $this->map(fn (Wish $wish) => $wish->wishable())->toBase();
+        return $this->map(fn (Wish $wish) => $wish->wishable)->toBase();
     }
 
     public function without(Wishable|int|string $id): self
