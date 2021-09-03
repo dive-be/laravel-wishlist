@@ -49,6 +49,13 @@ class EloquentWishlist implements Wishlist
         return $this->remember(fn () => $this->newQuery()->count());
     }
 
+    public function find(int|string|Wishable $id): ?Wish
+    {
+        return transform($this->newQuery()
+            ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))
+            ->first(), fn (Model $wish) => Wish::of($wish));
+    }
+
     public function has(Wishable $wishable): bool
     {
         return array_key_exists(

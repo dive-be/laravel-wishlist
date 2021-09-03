@@ -39,6 +39,11 @@ class InMemoryWishlist implements Wishlist
         return $this->wishes->count();
     }
 
+    public function find(int|string|Wishable $id): ?Wish
+    {
+        return $this->wishes->find($id);
+    }
+
     public function has(Wishable $wishable): bool
     {
         return $this->wishes->exists($wishable);

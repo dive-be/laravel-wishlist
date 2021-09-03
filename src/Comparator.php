@@ -29,7 +29,7 @@ final class Comparator
     public static function primitive(int|string $id): Closure
     {
         return function ($wish) use ($id) {
-            return is_array($wish) ? $wish['id'] : $wish->id === $id;
+            return (is_array($wish) ? $wish['id'] : $wish->id) === $id;
         };
     }
 }

@@ -77,6 +77,11 @@ class WishlistManager extends Manager implements Wishlist
         return $this->driver()->count();
     }
 
+    public function find(int|string|Wishable $id): ?Wish
+    {
+        return $this->driver()->find($id);
+    }
+
     public function has(Wishable $wishable): bool
     {
         return $this->driver()->has($wishable);

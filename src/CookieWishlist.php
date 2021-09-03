@@ -50,6 +50,11 @@ class CookieWishlist implements Wishlist
         return $this->wishlist->count();
     }
 
+    public function find(int|string|Wishable $id): ?Wish
+    {
+        return $this->wishlist->find($id);
+    }
+
     public function has(Wishable $wishable): bool
     {
         return $this->wishlist->has($wishable);

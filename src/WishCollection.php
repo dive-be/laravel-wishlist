@@ -20,9 +20,9 @@ class WishCollection extends Collection
         $this->hydrated = $this->isEmpty() || $this->first() instanceof Wish;
     }
 
-    public function find(Wishable $wishable): ?Wish
+    public function find(int|string|Wishable $id): ?Wish
     {
-        $index = $this->search(Comparator::object($wishable));
+        $index = $this->search(Comparator::for($id));
 
         if ($index === false) {
             return null;
@@ -31,7 +31,10 @@ class WishCollection extends Collection
         $wish = $this->get($index);
 
         if (is_array($wish)) {
-            $wish = Wish::make($wish['id'], $wishable);
+            $wish = Wish::make(
+                $wish['id'],
+                $id instanceof Wishable ? $id : $this->findModel($wish['wishable']['type'], $wish['wishable']['id']),
+            );
 
             $this->items = $this->replace([$index => $wish])->all();
         }
@@ -111,7 +114,7 @@ class WishCollection extends Collection
             $models = $wishes->groupBy('wishable.type')->map(function (self $wishes) {
                 return $wishes->map(fn (array $wish) => Arr::get($wish, 'wishable.id'))->all();
             })->map(function (array $ids, string $morphType) {
-                return call_user_func([$this->morphModel($morphType), 'findMany'], $ids)->keyBy('id');
+                return $this->findModels($morphType, $ids)->keyBy('id');
             });
 
             $this->transform(function (array|Wish $wish) use ($models) {
@@ -148,6 +151,16 @@ class WishCollection extends Collection
     public function without(Wishable|int|string $id): self
     {
         return $this->reject(Comparator::for($id));
+    }
+
+    private function findModel(string $type, int|string $id): Wishable
+    {
+        return call_user_func([$this->morphModel($type), 'find'], $id);
+    }
+
+    private function findModels(string $type, array $ids): EloquentCollection
+    {
+        return call_user_func([$this->morphModel($type), 'findMany'], $ids);
     }
 
     private function morphModel(string $type): string

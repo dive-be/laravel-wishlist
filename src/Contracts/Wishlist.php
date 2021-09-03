@@ -13,6 +13,8 @@ interface Wishlist
 
     public function count(): int;
 
+    public function find(int|string|Wishable $id): ?Wish;
+
     public function has(Wishable $wishable): bool;
 
     public function isEmpty(): bool;
