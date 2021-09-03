@@ -2,8 +2,21 @@
 
 return [
     'cookie' => [
+
+        /**
+         * You may choose to scope the cookies to a particular subdomain. Especially useful when serving multiple apps.
+         * The default (no scoping) will suffice for most apps, though.
+         */
         'domain' => env('WISHLIST_COOKIE_DOMAIN', env('SESSION_DOMAIN')),
-        'max_age' => env('WISHLIST_COOKIE_MAX_AGE', 43200),
+
+        /**
+         * Time-to-Live in minutes. Default 43200 (1 month).
+         */
+        'max_age' => env('WISHLIST_COOKIE_MAX_AGE', 43_200),
+
+        /**
+         * You may customize the name of the cookie. Completely optional.
+         */
         'name' => env('WISHLIST_COOKIE_NAME', 'wishlist'),
     ],
 
@@ -17,7 +30,18 @@ return [
     'driver' => env('WISHLIST_DRIVER', Dive\Wishlist\WishlistManager::ELOQUENT),
 
     'eloquent' => [
+
+        /**
+         * You may choose to provide a context for the saved wishes in the database.
+         * Particularly useful when serving multiple apps. The default will suffice for most apps, though.
+         */
         'scope' => 'default',
+
+        /**
+         * The user model of your application. For most apps, the default will suffice.
+         * However, if you wish, you may customize that here. This is used for the Wish model's
+         * user relationship so you can display the owner of the wish in .e.g. Laravel Nova.
+         */
         'user' => config('auth.providers.users.model'),
     ],
 ];
