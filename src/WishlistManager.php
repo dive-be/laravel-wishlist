@@ -39,11 +39,6 @@ class WishlistManager extends Manager implements Wishlist
         );
     }
 
-    protected function createDatabaseDriver(): EloquentWishlist
-    {
-        return $this->createEloquentDriver();
-    }
-
     protected function createEloquentDriver(?Authenticatable $user = null): EloquentWishlist
     {
         return EloquentWishlist::make(
