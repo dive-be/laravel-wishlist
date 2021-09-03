@@ -35,7 +35,11 @@ it('can migrate the wishes from the cookie driver to the eloquent driver', funct
 it('can be invoked from a listener', function () {
     $action = spy(MigrateWishesAction::class);
 
-    (new Listeners\MigrateWishes(app('config'), request()))->handle(new Login('web', user(), true));
+    (new Listeners\MigrateWishes($config = app('config'), new Request()))->handle($event = new Login('web', user(), true));
+
+    $action->shouldNotHaveReceived('execute');
+
+    (new Listeners\MigrateWishes($config, request()))->handle($event);
 
     $action->shouldHaveReceived('execute');
 });
