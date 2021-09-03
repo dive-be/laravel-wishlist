@@ -4,6 +4,8 @@ namespace Dive\Wishlist;
 
 use Dive\Wishlist\Contracts\Wishable;
 use Dive\Wishlist\Contracts\Wishlist;
+use Illuminate\Auth\AuthManager;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Manager;
 
 class WishlistManager extends Manager implements Wishlist
@@ -12,6 +14,11 @@ class WishlistManager extends Manager implements Wishlist
     public const COOKIE = 'cookie';
     public const ELOQUENT = 'eloquent';
     public const UPGRADE = 'upgrade';
+
+    public function forUser(Authenticatable $user): EloquentWishlist
+    {
+        return $this->createEloquentDriver($user);
+    }
 
     public function getDefaultDriver()
     {
@@ -37,21 +44,26 @@ class WishlistManager extends Manager implements Wishlist
         return $this->createEloquentDriver();
     }
 
-    protected function createEloquentDriver(): EloquentWishlist
+    protected function createEloquentDriver(?Authenticatable $user = null): EloquentWishlist
     {
         return EloquentWishlist::make(
-            call_user_func($this->container->make('auth')->userResolver())->getAuthIdentifier(),
+            ($user ?? call_user_func($this->auth()->userResolver()))->getAuthIdentifier(),
             $this->config->get('wishlist.eloquent.scope'),
         );
     }
 
     protected function createUpgradeDriver(): CookieWishlist|EloquentWishlist
     {
-        if ($this->container->make('auth')->check()) {
+        if ($this->auth()->check()) {
             return $this->createEloquentDriver();
         }
 
         return $this->createCookieDriver();
+    }
+
+    private function auth(): AuthManager
+    {
+        return $this->container->make(__FUNCTION__);
     }
 
     // region CONTRACT
