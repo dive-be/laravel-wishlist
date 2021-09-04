@@ -49,7 +49,7 @@ class EloquentWishlist implements Wishlist
         return $this->remember(fn () => $this->newQuery()->count());
     }
 
-    public function find(int|string|Wishable $id): ?Wish
+    public function find(string|Wishable $id): ?Wish
     {
         return transform($this->newQuery()
             ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))
@@ -102,7 +102,7 @@ class EloquentWishlist implements Wishlist
         });
     }
 
-    public function remove(int|string|Wishable $id): bool
+    public function remove(string|Wishable $id): bool
     {
         $removed = (bool) $this->newQuery()
             ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))

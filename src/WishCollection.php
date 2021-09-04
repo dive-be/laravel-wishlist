@@ -20,7 +20,7 @@ class WishCollection extends Collection
         $this->hydrated = $this->isEmpty() || $this->first() instanceof Wish;
     }
 
-    public function find(int|string|Wishable $id): ?Wish
+    public function find(string|Wishable $id): ?Wish
     {
         $index = $this->search(Comparator::for($id));
 
@@ -148,12 +148,12 @@ class WishCollection extends Collection
         return $this->map(fn (Wish $wish) => $wish->wishable)->toBase();
     }
 
-    public function without(Wishable|int|string $id): self
+    public function without(string|Wishable $id): self
     {
         return $this->reject(Comparator::for($id));
     }
 
-    private function findModel(string $type, int|string $id): Wishable
+    private function findModel(string $type, string $id): Wishable
     {
         return call_user_func([$this->morphModel($type), 'find'], $id);
     }

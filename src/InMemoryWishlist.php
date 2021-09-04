@@ -39,7 +39,7 @@ class InMemoryWishlist implements Wishlist
         return $this->wishes->count();
     }
 
-    public function find(int|string|Wishable $id): ?Wish
+    public function find(string|Wishable $id): ?Wish
     {
         return $this->wishes->find($id);
     }
@@ -66,7 +66,7 @@ class InMemoryWishlist implements Wishlist
         });
     }
 
-    public function remove(Wishable|int|string $id): bool
+    public function remove(string|Wishable $id): bool
     {
         $previous = $this->count();
 

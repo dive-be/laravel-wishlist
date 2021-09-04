@@ -50,7 +50,7 @@ class CookieWishlist implements Wishlist
         return $this->wishlist->count();
     }
 
-    public function find(int|string|Wishable $id): ?Wish
+    public function find(string|Wishable $id): ?Wish
     {
         return $this->wishlist->find($id);
     }
@@ -77,7 +77,7 @@ class CookieWishlist implements Wishlist
         });
     }
 
-    public function remove(Wishable|int|string $id): bool
+    public function remove(string|Wishable $id): bool
     {
         return tap($this->wishlist->remove($id), function (bool $removed) {
             if ($removed) {

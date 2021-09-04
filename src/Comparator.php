@@ -7,7 +7,7 @@ use Dive\Wishlist\Contracts\Wishable;
 
 final class Comparator
 {
-    public static function for(Wishable|int|string $comparable): Closure
+    public static function for(string|Wishable $comparable): Closure
     {
         if ($comparable instanceof Wishable) {
             return self::object($comparable);
@@ -26,7 +26,7 @@ final class Comparator
         };
     }
 
-    public static function primitive(int|string $id): Closure
+    public static function primitive(string $id): Closure
     {
         return function ($wish) use ($id) {
             return (is_array($wish) ? $wish['id'] : $wish->id) === $id;

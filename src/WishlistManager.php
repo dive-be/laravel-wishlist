@@ -77,7 +77,7 @@ class WishlistManager extends Manager implements Wishlist
         return $this->driver()->count();
     }
 
-    public function find(int|string|Wishable $id): ?Wish
+    public function find(string|Wishable $id): ?Wish
     {
         return $this->driver()->find($id);
     }
@@ -102,7 +102,7 @@ class WishlistManager extends Manager implements Wishlist
         return $this->driver()->purge();
     }
 
-    public function remove(Wishable|int|string $id): bool
+    public function remove(string|Wishable $id): bool
     {
         return $this->driver()->remove($id);
     }

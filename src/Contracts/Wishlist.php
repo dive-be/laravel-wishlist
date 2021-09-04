@@ -13,7 +13,7 @@ interface Wishlist
 
     public function count(): int;
 
-    public function find(int|string|Wishable $id): ?Wish;
+    public function find(string|Wishable $id): ?Wish;
 
     public function has(Wishable $wishable): bool;
 
@@ -23,5 +23,5 @@ interface Wishlist
 
     public function purge(): int;
 
-    public function remove(int|string|Wishable $id): bool;
+    public function remove(string|Wishable $id): bool;
 }
