@@ -83,7 +83,7 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
         throw new Exception("{$class} shouldn't be implicitly resolved from other bindings.");
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->id,
@@ -94,12 +94,12 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
         ];
     }
 
-    public function toJson($options = 0)
+    public function toJson($options = 0): string
     {
         return json_encode($this->jsonSerialize(), $options);
     }
 
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         if (! array_key_exists($name, $this->attributes)) {
             $class = static::class;

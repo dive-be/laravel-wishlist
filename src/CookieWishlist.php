@@ -88,12 +88,14 @@ class CookieWishlist implements Wishlist
 
     private function enqueue()
     {
-        $this->jar->queue($this->jar->make(
-            name: $this->name,
-            value: serialize($this->wishlist->all()),
-            minutes: $this->maxAge,
-            domain: $this->domain
-        ));
+        $this->jar->queue(
+            $this->jar->make(
+                name: $this->name,
+                value: serialize($this->wishlist->all()),
+                minutes: $this->maxAge,
+                domain: $this->domain
+            )
+        );
     }
 
     private function forget()

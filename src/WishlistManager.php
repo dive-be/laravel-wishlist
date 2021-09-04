@@ -20,7 +20,7 @@ class WishlistManager extends Manager implements Wishlist
         return $this->createEloquentDriver($user);
     }
 
-    public function getDefaultDriver()
+    public function getDefaultDriver(): string
     {
         return $this->config->get('wishlist.driver');
     }
