@@ -7,6 +7,7 @@ use Dive\Wishlist\WishlistManager;
 use Exception;
 use Tests\Fakes\Product;
 use function Pest\Laravel\mock;
+use function Pest\Laravel\spy;
 
 beforeEach(function () {
     $this->wish = Wish::make('1337', new Product(['id' => 9876]));
@@ -40,10 +41,24 @@ it('can retrieve the wishable', function () {
 });
 
 it('can be route model bound', function () {
-    mock('wishlist')->shouldReceive('find')->with('Dive Hard')->andReturn($this->wish);
+    mock('wishlist')
+        ->shouldReceive('find')
+        ->once()
+        ->withArgs(fn ($id) => $id === 'Dive Hard')
+        ->andReturn($this->wish);
 
     expect($this->wish->resolveRouteBinding('Dive Hard'))->toBe($this->wish);
     expect($this->wish->getRouteKey())->toBe('1337');
     expect($this->wish->getRouteKeyName())->toBe('wish');
     expect(fn () => $this->wish->resolveChildRouteBinding('Dive', 'Very', 'Hard'))->toThrow(Exception::class);
+});
+
+it('can be deleted', function () {
+    mock('wishlist')
+        ->shouldReceive('remove')
+        ->once()
+        ->withArgs(fn ($wish) => $wish === $this->wish)
+        ->andReturn(true);
+
+    $this->wish->delete();
 });
