@@ -12,7 +12,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
 
 /**
- * @property int|string $id
+ * @property string $id
  * @property Wishable   $wishable
  */
 class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
@@ -54,7 +54,7 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
         return $this;
     }
 
-    public function getRouteKey(): int|string
+    public function getRouteKey(): string
     {
         return $this->id;
     }
