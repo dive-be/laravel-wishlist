@@ -108,8 +108,8 @@ You can only use this driver inside routes that are protected by the `auth` midd
 
 __> This <__ is the driver that makes this package shine.
 
-- When the user is browsing your app unauthenticated, the [Cookie driver](#cookie) will be used under the hood to persist the wishlist.
-- When the user is authenticated, the [Eloquent driver](#eloquent) will be used.
+- When the user is browsing your app unauthenticated, the [Cookie driver](#cookie-) will be used under the hood to persist the wishlist.
+- When the user is authenticated, the [Eloquent driver](#eloquent-) will be used.
 
 🤌 Best of all? You don't have to change anything in your code. 
 
