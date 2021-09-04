@@ -87,12 +87,12 @@ If you need additional information about the available options, read on.
 
 This driver is meant for use in testing. Its contents are ephemeral and should _not_ be used in production.
 
-See [Testing section](#testing) below for additional information regarding unit tests.
+See [Testing section](#testing-) below for additional information regarding unit tests.
 
 #### Cookie 🍪
 
 The user's wishlist will be persisted client-side as a stringified JSON. 
-You should make use of [Laravel's cookie encryption](https://laravel.com/docs/8.x/requests#retrieving-cookies-from-requests) (enabled by default) or any user will be able to crash your application (there is no validation) when the cookie values are tampered with. 
+You should make use of [Laravel's cookie encryption](https://laravel.com/docs/8.x/requests#retrieving-cookies-from-requests) (enabled by default) or any user will be able to crash your application (because there is no validation) when the cookie values are tampered with. 
 The internal structure of your code base will be leaked partially as well if you do not make use of [relation morph maps](https://laravel.com/docs/8.x/eloquent-relationships#custom-polymorphic-types).
 
 > Note: make sure the name of the cookie you wish to use (pun intended) is not excluded for encryption in the `\App\Http\Middleware\EncryptCookies::$excluded` array.
@@ -220,12 +220,19 @@ $wishes = Wishlist::all();
 You will receive an instance of [`Dive\Wishlist\WishCollection<Wish>`](src/WishCollection.php).
 Refer to the class definition for all convenience methods.
 
+### Finding a wish
+
+```php
+$wish = Wishlist::find($product);
+```
+
 ### Eager loading wish relations
 
 When there is only a single type of `Wishable` (and you know for sure there won't be any other), you may omit the morph types entirely:
 
 ```php
-$wishes = Wishlist::all()->load(['productable', 'variant']); // ✅ Collection only contains Wishables of type "product"
+// ✅ Collection only contains Wishables of type "product"
+$wishes = Wishlist::all()->load(['productable', 'variant']);
 ```
 
 In other cases, you must provide a type-relation map:
@@ -240,7 +247,8 @@ $wishes = Wishlist::all()->load([
 A `LogicException` will be thrown in case of ambiguity:    
 
 ```php
-$wishes = Wishlist::all()->load(['productable', 'variant']); // 🚫 Collection contains 2 types of Wishable: Product & Sample
+// 🚫 Collection contains 2 types of Wishable: Product & Sample
+$wishes = Wishlist::all()->load(['productable', 'variant']);
 ```
 
 ### Retrieving total count
@@ -290,7 +298,7 @@ public function destroy(Product $product)
 
 ## Migrating wishes 🚚
 
-While using the [upgrade driver](#upgrade-), you might want to carry over the user's cookie wishlist to the database.
+While using the [Upgrade driver](#upgrade-), you may want to carry over the user's cookie wishlist to the database.
 This is not enabled by default, but you have 2 options to opt into this behavior:
 
 ### Event listener
@@ -343,15 +351,15 @@ Route::delete('wishlist/{wish}/delete', function (Wish $wish) {
 });
 ```
 
-- As this is **not** an Eloquent model, you can still use this syntax even if you only use the cookie driver! 🎉
+- As this is **not** an Eloquent model, you can still use this syntax even if you only use the [Cookie driver](#cookie-)! 🎉
 - Just like Eloquent models, a `ModelNotFoundException` will be thrown if the requested wish cannot be found.
 
 > Note: you cannot make the `wish` parameter a child of a parent parameter because it does not make sense. An exception will be thrown if you attempt to do so.
 
 ## Retrieving a particular user's wishlist 👱🏻‍♂️
 
-You might want to modify a user's wishlist in e.g. an Artisan command where no auth context is available.
-You may call the `forUser` method with a `User` instance to retrieve a wishlist scoped to that user:
+You may want to modify a user's wishlist in e.g. an Artisan command where no auth context is available.
+For these cases, you can invoke the `forUser` method with a `User` instance to retrieve a wishlist scoped to that user:
 
 ```php
 class ClearWishlistCommand extends Command
