@@ -327,9 +327,26 @@ class Kernel extends HttpKernel
 
 > Note: make sure to place the middleware **after** `EncryptCookies`
 
-## Route model binding
+## Route model binding 
 
-__TODO__
+Wouldn't it be nice to have a wish automatically resolved from a route parameter? 
+
+Well, say no more! 👇
+
+```php
+use Dive\Wishlist\Wish;
+
+Route::delete('wishlist/{wish}/delete', function (Wish $wish) {
+    $wish->delete();
+    
+    return redirect()->to('dashboard');
+});
+```
+
+- As this is **not** an Eloquent model, you can still use this syntax even if you only use the cookie driver! 🎉
+- Just like Eloquent models, a `ModelNotFoundException` will be thrown if the requested wish cannot be found.
+
+> Note: you cannot make the `wish` parameter a child of a parent parameter because it does not make sense. An exception will be thrown if you attempt to do so.
 
 ## Retrieving a particular user's wishlist 👱🏻‍♂️
 
