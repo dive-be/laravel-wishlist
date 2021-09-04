@@ -2,7 +2,6 @@
 
 namespace Dive\Wishlist;
 
-use Closure;
 use Dive\Wishlist\Contracts\Wishable;
 use Dive\Wishlist\Models\Wish as Model;
 use Exception;
@@ -17,7 +16,7 @@ use JsonSerializable;
  */
 class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 {
-    private static Closure $managerResolver;
+    private static WishlistManager $manager;
 
     private array $attributes;
 
@@ -31,9 +30,9 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
         return (new self())->fill(compact('id', 'wishable'));
     }
 
-    public static function setManagerResolver(Closure $resolver)
+    public static function setWishlistManager(WishlistManager $manager)
     {
-        static::$managerResolver = $resolver;
+        static::$manager = $manager;
     }
 
     public function fill(array $attributes): self
@@ -62,9 +61,7 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 
     public function resolveRouteBinding($value, $field = null): ?self
     {
-        return isset(static::$managerResolver)
-            ? call_user_func(static::$managerResolver)->find($value)
-            : null;
+        return isset(static::$manager) ? static::$manager->find($value) : null;
     }
 
     public function resolveChildRouteBinding($childType, $value, $field)
