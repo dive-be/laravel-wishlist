@@ -23,5 +23,5 @@ interface Wishlist
 
     public function purge(): int;
 
-    public function remove(string|Wishable $id): bool;
+    public function remove(string|Wish|Wishable $id): bool;
 }

@@ -92,6 +92,7 @@ it('can remove a wish', function (Wishlist $wishlist, Closure $valueRetriever) {
     expect($resultB)->toBeFalse();
     expect($wishlist->isEmpty())->toBeTrue();
 })->with('wishlists')->with([
+    fn () => fn ($wish) => $wish,
     fn () => fn ($wish) => $wish->id,
     fn () => fn ($wish) => $wish->wishable,
 ]);

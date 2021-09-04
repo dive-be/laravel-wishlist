@@ -66,8 +66,12 @@ class InMemoryWishlist implements Wishlist
         });
     }
 
-    public function remove(string|Wishable $id): bool
+    public function remove(string|Wish|Wishable $id): bool
     {
+        if ($id instanceof Wish) {
+            $id = $id->id;
+        }
+
         $previous = $this->count();
 
         $this->wishes = $this->wishes->without($id);

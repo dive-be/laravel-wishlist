@@ -77,7 +77,7 @@ class CookieWishlist implements Wishlist
         });
     }
 
-    public function remove(string|Wishable $id): bool
+    public function remove(string|Wish|Wishable $id): bool
     {
         return tap($this->wishlist->remove($id), function (bool $removed) {
             if ($removed) {

@@ -102,8 +102,12 @@ class EloquentWishlist implements Wishlist
         });
     }
 
-    public function remove(string|Wishable $id): bool
+    public function remove(string|Wish|Wishable $id): bool
     {
+        if ($id instanceof Wish) {
+            $id = $id->id;
+        }
+
         $removed = (bool) $this->newQuery()
             ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))
             ->delete();

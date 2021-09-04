@@ -102,7 +102,7 @@ class WishlistManager extends Manager implements Wishlist
         return $this->driver()->purge();
     }
 
-    public function remove(string|Wishable $id): bool
+    public function remove(string|Wish|Wishable $id): bool
     {
         return $this->driver()->remove($id);
     }
