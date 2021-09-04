@@ -3,12 +3,12 @@
 namespace Tests;
 
 use Dive\Wishlist\Contracts\Wishable;
-use Illuminate\Foundation\Auth\User;
-use Orchestra\Testbench\Factories\UserFactory;
 use Tests\Fakes\Factories\ProductFactory;
 use Tests\Fakes\Factories\SampleFactory;
+use Tests\Fakes\Factories\UserFactory;
 use Tests\Fakes\Product;
 use Tests\Fakes\Sample;
+use Tests\Fakes\User;
 
 function product(): Product
 {
