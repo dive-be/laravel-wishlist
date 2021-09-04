@@ -23,10 +23,10 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 
     public static function of(Model $model): self
     {
-        return self::make($model->getKey(), $model->getRelationValue('wishable'));
+        return self::make($model->getAttribute('uuid'), $model->getRelationValue('wishable'));
     }
 
-    public static function make(int|string $id, Wishable $wishable): self
+    public static function make(string $id, Wishable $wishable): self
     {
         return (new self())->fill(compact('id', 'wishable'));
     }

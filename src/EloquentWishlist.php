@@ -8,6 +8,7 @@ use Dive\Wishlist\Models\Wish as Model;
 use Dive\Wishlist\Support\Makeable;
 use Dive\Wishlist\Support\RemembersResults;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class EloquentWishlist implements Wishlist
 {
@@ -26,7 +27,7 @@ class EloquentWishlist implements Wishlist
         $model = $this->newQuery()->where($columns = $this->morphColumns($wishable))->first();
 
         if (! $model instanceof Model) {
-            $model = Model::create(array_merge($this->constraints, $columns));
+            $model = Model::create(['uuid' => (string) Str::uuid()] + $this->constraints + $columns);
 
             $this->markAsDirty();
         }
@@ -52,7 +53,7 @@ class EloquentWishlist implements Wishlist
     public function find(string|Wishable $id): ?Wish
     {
         return transform($this->newQuery()
-            ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))
+            ->where($id instanceof Wishable ? $this->morphColumns($id) : ['uuid' => $id])
             ->first(), fn (Model $wish) => Wish::of($wish));
     }
 
@@ -86,10 +87,11 @@ class EloquentWishlist implements Wishlist
         $this->newQuery()->insert(
             $wishes->reject(function (Wish $wish) use ($wishMap) {
                 return $wishMap->has($wish->wishable->getMorphKey());
-            })->map(fn (Wish $wish) => [
+            })->map(fn (Wish $wish) => $this->morphColumns($wish->wishable) + $this->constraints + [
                 'created_at' => now(),
                 'updated_at' => now(),
-            ] + array_merge($this->morphColumns($wish->wishable), $this->constraints))->all()
+                'uuid' => $wish->id,
+            ])->all()
         );
 
         $this->markAsDirty();
@@ -109,7 +111,7 @@ class EloquentWishlist implements Wishlist
         }
 
         $removed = (bool) $this->newQuery()
-            ->where($id instanceof Wishable ? $this->morphColumns($id) : compact('id'))
+            ->where($id instanceof Wishable ? $this->morphColumns($id) : ['uuid' => $id])
             ->delete();
 
         if ($removed) {

@@ -11,8 +11,8 @@ use Illuminate\Http\Request;
 it('retrieves existing wishes from the correct cookie', function () {
     expect(
         wishlist([
-            Wish::make(1, wishable()),
-            Wish::make(2, wishable()),
+            Wish::make('1', wishable()),
+            Wish::make('2', wishable()),
         ])->count()
     )->toBe(2);
 });
@@ -20,8 +20,8 @@ it('retrieves existing wishes from the correct cookie', function () {
 it('hydrates the collection when necessary', function () {
     expect(
         wishlist([
-            Wish::make(1, wishable()),
-            Wish::make(2, wishable()),
+            Wish::make('1', wishable()),
+            Wish::make('2', wishable()),
         ])->all()
     )->each->toBeInstanceOf(Wish::class);
 });
@@ -57,7 +57,7 @@ it('enqueues a new cookie when modifications happen', function () {
 });
 
 it('forgets the cookie when a purge takes place', function () {
-    $wishlist = wishlist([Wish::make(1, wishable())]);
+    $wishlist = wishlist([Wish::make('1', wishable())]);
 
     expect($this->jar->getQueuedCookies())->toHaveCount(0);
 

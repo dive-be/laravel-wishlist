@@ -24,7 +24,7 @@ class InMemoryWishlist implements Wishlist
             return $wish;
         }
 
-        return tap(Wish::make(Str::random(), $wishable), function ($wish) {
+        return tap(Wish::make((string) Str::uuid(), $wishable), function ($wish) {
             $this->wishes->push($wish);
         });
     }

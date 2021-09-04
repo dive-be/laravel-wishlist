@@ -10,6 +10,7 @@ class CreateWishesTable extends Migration
     {
         Schema::create('wishes', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignId('user_id')->constrained();
             $table->morphs('wishable');
             $table->string('scope')->index();

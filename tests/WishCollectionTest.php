@@ -11,9 +11,9 @@ use Tests\Fakes\Sample;
 
 beforeEach(function () {
     $this->collection = WishCollection::make([
-        Wish::make(1, product()),
-        Wish::make(2, $this->wishable = sample()),
-        Wish::make(333, product()),
+        Wish::make('1', product()),
+        Wish::make('2', $this->wishable = sample()),
+        Wish::make('333', product()),
     ]);
 });
 
@@ -21,7 +21,7 @@ it('can find a wish using a wishable', function () {
     expect($this->collection->find($this->wishable))
         ->toBeInstanceOf(Wish::class)
         ->wishable->toBeInstanceOf(Sample::class)
-        ->id->toBe(2);
+        ->id->toBe('2');
 });
 
 it('can determine existence using a wishable', function () {

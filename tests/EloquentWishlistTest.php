@@ -15,9 +15,9 @@ it('can merge a collection of wishes with its own', function () {
 
     $wishlist->merge(WishCollection::make([
         $sampleA, // duplicate
-        Wish::make(1234, sample()),
+        Wish::make('1234', sample()),
         $productA, // duplicate
-        Wish::make(5678, product()),
+        Wish::make('5678', product()),
     ]));
 
     expect($wishlist->count())->toBe(5);
