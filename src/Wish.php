@@ -12,8 +12,8 @@ use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
 
 /**
- * @property string $id
- * @property Wishable   $wishable
+ * @property string   $id
+ * @property Wishable $wishable
  */
 class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 {
