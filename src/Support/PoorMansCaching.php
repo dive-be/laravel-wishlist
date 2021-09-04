@@ -4,7 +4,7 @@ namespace Dive\Wishlist\Support;
 
 use Closure;
 
-trait RemembersResults
+trait PoorMansCaching
 {
     private array $cache = [
         'methods' => [],

@@ -6,14 +6,14 @@ use Dive\Wishlist\Contracts\Wishable;
 use Dive\Wishlist\Contracts\Wishlist;
 use Dive\Wishlist\Models\Wish as Model;
 use Dive\Wishlist\Support\Makeable;
-use Dive\Wishlist\Support\RemembersResults;
+use Dive\Wishlist\Support\PoorMansCaching;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class EloquentWishlist implements Wishlist
 {
     use Makeable;
-    use RemembersResults;
+    use PoorMansCaching;
 
     private array $constraints;
 
