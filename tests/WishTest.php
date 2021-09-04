@@ -3,11 +3,9 @@
 namespace Tests;
 
 use Dive\Wishlist\Wish;
-use Dive\Wishlist\WishlistManager;
 use Exception;
 use Tests\Fakes\Product;
 use function Pest\Laravel\mock;
-use function Pest\Laravel\spy;
 
 beforeEach(function () {
     $this->wish = Wish::make('1337', new Product(['id' => 9876]));

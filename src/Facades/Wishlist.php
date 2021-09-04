@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Dive\Wishlist\WishCollection all()
  * @method static int count()
  * @method static \Dive\Wishlist\EloquentWishlist forUser(\Illuminate\Contracts\Auth\Authenticatable $user)
+ * @method static \Dive\Wishlist\Wish|null find(string|\Dive\Wishlist\Contracts\Wishable $id)
  * @method static bool has(\Dive\Wishlist\Contracts\Wishable $wishable)
  * @method static bool isEmpty()
  * @method static bool isNotEmpty()
  * @method static int purge()
- * @method static bool remove(int|string|\Dive\Wishlist\Contracts\Wishable $id)
+ * @method static bool remove(string|\Dive\Wishlist\Wish|\Dive\Wishlist\Contracts\Wishable $id)
  */
 class Wishlist extends Facade
 {
