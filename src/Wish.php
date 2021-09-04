@@ -35,6 +35,15 @@ class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
         static::$manager = $manager;
     }
 
+    public function delete(): bool
+    {
+        if (isset(static::$manager)) {
+            return static::$manager->remove($this);
+        }
+
+        return false;
+    }
+
     public function fill(array $attributes): self
     {
         if (! isset($this->attributes)) {
