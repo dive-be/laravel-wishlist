@@ -17,7 +17,7 @@ class WishlistServiceProvider extends ServiceProvider
             $this->registerMigration();
         }
 
-        Wish::setWishlistManager($this->app['wishlist']);
+        Wish::setManagerResolver(fn () => $this->app['wishlist']);
     }
 
     public function register()
