@@ -10,16 +10,16 @@ trait InteractsWithWishlist
 {
     public function unwish(Wishable $wishable): bool
     {
-        return app('wishlist')->forUser($this)->remove($wishable);
+        return wishlist()->forUser($this)->remove($wishable);
     }
 
     public function wish(Wishable $wishable): Wish
     {
-        return app('wishlist')->forUser($this)->add($wishable);
+        return wishlist()->forUser($this)->add($wishable);
     }
 
     public function wishes(): WishCollection
     {
-        return app('wishlist')->forUser($this)->all();
+        return wishlist()->forUser($this)->all();
     }
 }
