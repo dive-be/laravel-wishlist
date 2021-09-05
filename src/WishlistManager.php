@@ -4,8 +4,8 @@ namespace Dive\Wishlist;
 
 use Dive\Wishlist\Contracts\Wishable;
 use Dive\Wishlist\Contracts\Wishlist;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Manager;
 
 class WishlistManager extends Manager implements Wishlist
@@ -15,6 +15,16 @@ class WishlistManager extends Manager implements Wishlist
     public const ELOQUENT = 'eloquent';
     public const UPGRADE = 'upgrade';
 
+    public function auth(): Guard
+    {
+        return $this->container->make(__FUNCTION__)->guard($this->config('auth_guard'));
+    }
+
+    public function config(string $key): array|string
+    {
+        return $this->config->get("wishlist.{$key}");
+    }
+
     public function forUser(Authenticatable $user): EloquentWishlist
     {
         return $this->createEloquentDriver($user);
@@ -22,7 +32,7 @@ class WishlistManager extends Manager implements Wishlist
 
     public function getDefaultDriver(): string
     {
-        return $this->config->get('wishlist.driver');
+        return $this->config('driver');
     }
 
     protected function createArrayDriver(): InMemoryWishlist
@@ -33,17 +43,17 @@ class WishlistManager extends Manager implements Wishlist
     protected function createCookieDriver(): CookieWishlist
     {
         return CookieWishlist::make(
-            $this->container->make('cookie'),
-            $this->container->make('request'),
-            $this->config->get('wishlist.cookie'),
+            $this->container['cookie'],
+            $this->container['request'],
+            $this->config('cookie'),
         );
     }
 
     protected function createEloquentDriver(?Authenticatable $user = null): EloquentWishlist
     {
         return EloquentWishlist::make(
-            ($user ?? call_user_func($this->auth()->userResolver()))->getAuthIdentifier(),
-            $this->config->get('wishlist.eloquent.scope'),
+            ($user ?? $this->auth()->user())->getAuthIdentifier(),
+            $this->config('eloquent.scope'),
         );
     }
 
@@ -54,11 +64,6 @@ class WishlistManager extends Manager implements Wishlist
         }
 
         return $this->createCookieDriver();
-    }
-
-    private function auth(): AuthManager
-    {
-        return $this->container->make(__FUNCTION__);
     }
 
     // region CONTRACT

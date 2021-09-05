@@ -27,6 +27,12 @@ This is the contents of the published config file:
 
 ```php
 return [
+    
+    /**
+     * The authentication guard to use when using the `eloquent` or `upgrade` drivers.
+     */
+    'auth_guard' => config('auth.defaults.guard'),
+
     'cookie' => [
 
         /**
