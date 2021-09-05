@@ -35,18 +35,19 @@ it('can migrate the wishes from the cookie driver to the eloquent driver', funct
 it('can be invoked from a listener', function () {
     $action = spy(MigrateWishesAction::class);
 
-    (new Listeners\MigrateWishes($config = app('config'), new Request()))->handle($event = new Login('web', user(), true));
+    (new Listeners\MigrateWishes(new Request(), $wishlist = app('wishlist')))
+        ->handle($event = new Login('web', user(), true));
 
     $action->shouldNotHaveReceived('execute');
 
-    (new Listeners\MigrateWishes($config, request()))->handle($event);
+    (new Listeners\MigrateWishes(request(), $wishlist))->handle($event);
 
     $action->shouldHaveReceived('execute');
 });
 
 it('can be invoked from middleware', function () {
     $action = spy(MigrateWishesAction::class);
-    $middleware = new Middleware\MigrateWishes();
+    $middleware = app(Middleware\MigrateWishes::class);
     $next = fn () => 'next';
 
     expect($middleware->handle($emptyRequest = new Request(), $next))->toBe('next');
@@ -70,5 +71,5 @@ it('can be invoked from middleware', function () {
 
 function request(): Request
 {
-    return new Request(cookies: [config('wishlist.cookie.name') => 'Tasteful cookie']);
+    return new Request(cookies: [app('wishlist')->config('cookie.name') => 'Tasteful cookie']);
 }

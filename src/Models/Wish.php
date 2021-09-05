@@ -15,7 +15,7 @@ class Wish extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(config('wishlist.eloquent.user'));
+        return $this->belongsTo(app('wishlist')->config('eloquent.user'));
     }
 
     public function wishable(): MorphTo
