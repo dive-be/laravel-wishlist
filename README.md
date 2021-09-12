@@ -1,14 +1,13 @@
 # ❤️ - Manage your users' wishes in a Laravel app
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/dive-be/laravel-wishlist.svg?style=flat-square)](https://packagist.org/packages/dive-be/laravel-wishlist)
-
-⚠️ Minor releases of this package may cause breaking changes as it has no stable release yet.
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Total Downloads](https://img.shields.io/packagist/dt/dive-be/laravel-wishlist.svg?style=flat-square)](https://packagist.org/packages/dive-be/laravel-wishlist)
 
 ## What problem does this package solve?
 
-This package provides solutions to common problems when managing user preferences AKA a wishlist.
-
-It allows for seamless transitions between storage drivers depending on a user's authentication state.
+This package provides solutions to common problems when managing a user's wishlist.
+It also allows for seamless transitions between storage drivers depending on a user's authentication state.
 
 ## Installation
 
