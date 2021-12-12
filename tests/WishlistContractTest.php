@@ -7,6 +7,7 @@ use Dive\Wishlist\Contracts\Wishlist;
 use Dive\Wishlist\CookieWishlist;
 use Dive\Wishlist\EloquentWishlist;
 use Dive\Wishlist\InMemoryWishlist;
+use Dive\Wishlist\Models\Wish as Model;
 use Dive\Wishlist\Wish;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
@@ -99,7 +100,7 @@ it('can remove a wish', function (Wishlist $wishlist, Closure $valueRetriever) {
 
 dataset('wishlists', [
     fn () => InMemoryWishlist::make(),
-    fn () => EloquentWishlist::make(user()->getKey(), '*'),
+    fn () => EloquentWishlist::make(new Model(), user()->getKey(), '*'),
     fn () => CookieWishlist::make(new CookieJar(), new Request(), [
         'domain' => '.localhost',
         'max_age' => 1337,

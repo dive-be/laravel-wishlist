@@ -38,6 +38,12 @@ return [
     'eloquent' => [
 
         /**
+         * The model that should be used with this driver.
+         * It must be, or extend the base Wish model.
+         */
+        'model' => Dive\Wishlist\Models\Wish::class,
+
+        /**
          * You may choose to provide a context for the saved wishes in the database.
          * Particularly useful when serving multiple apps. The default will suffice for most apps, though.
          */

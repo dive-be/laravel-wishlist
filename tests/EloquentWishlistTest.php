@@ -3,11 +3,12 @@
 namespace Tests;
 
 use Dive\Wishlist\EloquentWishlist;
+use Dive\Wishlist\Models\Wish as Model;
 use Dive\Wishlist\Wish;
 use Dive\Wishlist\WishCollection;
 
 it('can merge a collection of wishes with its own', function () {
-    $wishlist = EloquentWishlist::make(user()->getKey(), '*');
+    $wishlist = EloquentWishlist::make(new Model(), user()->getKey(), '*');
 
     $wishlist->add(product());
     $sampleA = $wishlist->add(sample());

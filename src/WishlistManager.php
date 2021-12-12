@@ -52,6 +52,7 @@ class WishlistManager extends Manager implements Wishlist
     protected function createEloquentDriver(?Authenticatable $user = null): EloquentWishlist
     {
         return EloquentWishlist::make(
+            new ($this->config('eloquent.model'))(),
             ($user ?? $this->auth()->user())->getAuthIdentifier(),
             $this->config('eloquent.scope'),
         );

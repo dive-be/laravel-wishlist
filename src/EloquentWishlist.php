@@ -17,8 +17,11 @@ class EloquentWishlist implements Wishlist
 
     private array $constraints;
 
-    public function __construct(int $user, string $scope)
-    {
+    public function __construct(
+        private Model $model,
+        int $user,
+        string $scope,
+    ) {
         $this->constraints = ['user_id' => $user, 'scope' => $scope];
     }
 
@@ -27,7 +30,7 @@ class EloquentWishlist implements Wishlist
         $model = $this->newQuery()->where($columns = $this->morphColumns($wishable))->first();
 
         if (! $model instanceof Model) {
-            $model = Model::create(['uuid' => (string) Str::uuid()] + $this->constraints + $columns);
+            $model = $this->model->create(['uuid' => (string) Str::uuid()] + $this->constraints + $columns);
 
             $this->markAsDirty();
         }
@@ -134,6 +137,6 @@ class EloquentWishlist implements Wishlist
      */
     private function newQuery(): Builder
     {
-        return Model::query()->where($this->constraints);
+        return $this->model->newQuery()->where($this->constraints);
     }
 }

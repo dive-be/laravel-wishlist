@@ -13,6 +13,8 @@ class Wish extends Model
 
     protected $guarded = ['id'];
 
+    protected $table = 'wishes';
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(wishlist('eloquent.user'));
