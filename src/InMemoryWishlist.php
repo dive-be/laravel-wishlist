@@ -15,7 +15,7 @@ class InMemoryWishlist implements Wishlist
 
     public function __construct(array|WishCollection $wishes = [])
     {
-        $this->wishes = WishCollection::make($wishes);
+        $this->wishes = new WishCollection($wishes);
     }
 
     public function add(Wishable $wishable): Wish

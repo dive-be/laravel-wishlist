@@ -15,7 +15,7 @@ use JsonSerializable;
  * @property string   $id
  * @property Wishable $wishable
  */
-class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
+final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 {
     private static Closure $managerResolver;
 

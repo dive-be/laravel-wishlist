@@ -89,9 +89,9 @@ class WishCollection extends Collection
 
             $groupedByType->each(function (self $wishes, string $morphType) use ($relations) {
                 if (array_key_exists($morphType, $relations)) {
-                    EloquentCollection::make(
+                    (new EloquentCollection(
                         $wishes->map(fn (Wish $wish) => $wish->wishable)->all()
-                    )->load($relations[$morphType]);
+                    ))->load($relations[$morphType]);
                 }
             });
         }
@@ -111,7 +111,7 @@ class WishCollection extends Collection
         $wishes = $this->reject(fn ($wish) => $wish instanceof Wish);
 
         if ($wishes->isNotEmpty()) {
-            $models = $wishes->groupBy('wishable.type')->map(function (self $wishes) {
+            $models = $wishes->groupBy('wishable.type')->map(function ($wishes) {
                 return $wishes->map(fn (array $wish) => Arr::get($wish, 'wishable.id'))->all();
             })->map(function (array $ids, string $morphType) {
                 return $this->findModels($morphType, $ids)->keyBy('id');
