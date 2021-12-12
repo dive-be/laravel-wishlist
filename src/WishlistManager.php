@@ -49,6 +49,11 @@ class WishlistManager extends Manager implements Wishlist
         );
     }
 
+    protected function createDriver($driver): WishlistEventDecorator
+    {
+        return $this->events(parent::createDriver($driver));
+    }
+
     protected function createEloquentDriver(?Authenticatable $user = null): EloquentWishlist
     {
         return EloquentWishlist::make(
@@ -65,6 +70,11 @@ class WishlistManager extends Manager implements Wishlist
         }
 
         return $this->createCookieDriver();
+    }
+
+    protected function events(Wishlist $wishlist): WishlistEventDecorator
+    {
+        return WishlistEventDecorator::make($wishlist, $this->container['events']);
     }
 
     // region CONTRACT
