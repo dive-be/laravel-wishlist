@@ -1,14 +1,12 @@
-<?php
+<?php declare(strict_types=1);
 
 return [
-
     /**
      * The authentication guard to use when using the `eloquent` or `upgrade` drivers.
      */
     'auth_guard' => config('auth.defaults.guard'),
 
     'cookie' => [
-
         /**
          * You may choose to scope the cookies to a particular subdomain. Especially useful when serving multiple apps.
          * The default (no scoping) will suffice for most apps, though.
@@ -31,12 +29,11 @@ return [
      * - "array" (only available during the current request lifecycle)
      * - "cookie" (persists the user's wishes as a serialized string inside a cookie)
      * - "eloquent" (persists the users' wishes to the `wishes` table)
-     * - "upgrade" (uses the cookie driver if a user is not authenticated, otherwise uses the eloquent driver)
+     * - "upgrade" (uses the cookie driver if a user is not authenticated, otherwise uses the eloquent driver).
      */
     'driver' => env('WISHLIST_DRIVER', Dive\Wishlist\WishlistManager::ELOQUENT),
 
     'eloquent' => [
-
         /**
          * The model that should be used with this driver.
          * It must be, or extend the base Wish model.

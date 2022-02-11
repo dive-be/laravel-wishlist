@@ -22,7 +22,7 @@ class WishlistServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/wishlist.php', 'wishlist');
+        $this->mergeConfigFrom(__DIR__ . '/../config/wishlist.php', 'wishlist');
 
         $this->app->singleton(WishlistManager::class);
         $this->app->alias(WishlistManager::class, Wishlist::class);
@@ -41,7 +41,7 @@ class WishlistServiceProvider extends ServiceProvider
         $config = 'wishlist.php';
 
         $this->publishes([
-            __DIR__.'/../config/'.$config => $this->app->configPath($config),
+            __DIR__ . '/../config/' . $config => $this->app->configPath($config),
         ], 'config');
     }
 
@@ -53,7 +53,7 @@ class WishlistServiceProvider extends ServiceProvider
 
         if ($doesntExist) {
             $timestamp = date('Y_m_d_His', time());
-            $stub = __DIR__."/../database/migrations/{$migration}.stub";
+            $stub = __DIR__ . "/../database/migrations/{$migration}.stub";
 
             $this->publishes([
                 $stub => $this->app->databasePath("migrations/{$timestamp}_{$migration}"),

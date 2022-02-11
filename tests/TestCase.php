@@ -55,8 +55,8 @@ class TestCase extends BaseTestCase
             $table->string('name');
         });
 
-        $users = require __DIR__.'/../vendor/orchestra/testbench-core/laravel/migrations/2014_10_12_000000_testbench_create_users_table.php';
-        $wishes = require __DIR__.'/../database/migrations/create_wishes_table.php.stub';
+        $users = require __DIR__ . '/../vendor/orchestra/testbench-core/laravel/migrations/2014_10_12_000000_testbench_create_users_table.php';
+        $wishes = require __DIR__ . '/../database/migrations/create_wishes_table.php.stub';
 
         $users->up();
         $wishes->up();
