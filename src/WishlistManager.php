@@ -78,6 +78,7 @@ class WishlistManager extends Manager implements Wishlist
     }
 
     // region CONTRACT
+
     public function add(Wishable $wishable): Wish
     {
         return $this->driver()->add($wishable);

@@ -4,7 +4,6 @@ namespace Dive\Wishlist\Listeners;
 
 use Dive\Wishlist\Actions\MigrateWishesAction;
 use Dive\Wishlist\WishlistManager;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 
 class MigrateWishes
@@ -14,7 +13,7 @@ class MigrateWishes
         private WishlistManager $wishlist,
     ) {}
 
-    public function handle(Login $event)
+    public function handle()
     {
         if ($this->request->hasCookie($this->wishlist->config('cookie.name'))) {
             app(MigrateWishesAction::class)->execute();

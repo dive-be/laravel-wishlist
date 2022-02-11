@@ -44,8 +44,8 @@ class EloquentWishlist implements Wishlist
             ->newQuery()
             ->with('wishable')
             ->get()
-            ->map(fn ($model) => Wish::of($model))
-            ->pipe(fn ($collection) => WishCollection::make($collection)));
+            ->map(static fn ($model) => Wish::of($model))
+            ->pipe(static fn ($collection) => WishCollection::make($collection)));
     }
 
     public function count(): int
@@ -57,7 +57,7 @@ class EloquentWishlist implements Wishlist
     {
         return transform($this->newQuery()
             ->where($id instanceof Wishable ? $this->morphColumns($id) : ['uuid' => $id])
-            ->first(), fn (Model $wish) => Wish::of($wish));
+            ->first(), static fn (Model $wish) => Wish::of($wish));
     }
 
     public function has(Wishable $wishable): bool
@@ -68,7 +68,7 @@ class EloquentWishlist implements Wishlist
                 ->newQuery()
                 ->toBase()
                 ->get(['wishable_id', 'wishable_type'])
-                ->mapWithKeys(fn ($wish) => ["{$wish->wishable_type}-{$wish->wishable_id}" => true])
+                ->mapWithKeys(static fn ($wish) => ["{$wish->wishable_type}-{$wish->wishable_id}" => true])
                 ->toArray())
         );
     }

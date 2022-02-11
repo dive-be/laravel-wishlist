@@ -6,7 +6,9 @@ use Dive\Wishlist\WishlistManager;
 
 class MigrateWishesAction
 {
-    public function __construct(private WishlistManager $wishlist) {}
+    public function __construct(
+        private WishlistManager $wishlist,
+    ) {}
 
     public function execute()
     {

@@ -47,9 +47,6 @@ class WishCollection extends Collection
         return $this->some(Comparator::object($wishable));
     }
 
-    /**
-     * @return Collection<string, WishCollection>
-     */
     public function groupByType(): Collection
     {
         return $this->groupBy(fn (Wish $wish) => $wish->wishable->getMorphClass())->toBase();

@@ -9,6 +9,6 @@ class WishlistTouched
     use Makeable;
 
     public function __construct(
-        public int $count,
+        public readonly int $count,
     ) {}
 }

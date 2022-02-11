@@ -1,15 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Tests;
 
-use CreateWishesTable;
 use Dive\Wishlist\Facades\Wishlist;
 use Dive\Wishlist\WishlistServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use TestbenchCreateUsersTable;
 use Tests\Fakes\Product;
 use Tests\Fakes\Sample;
 
@@ -57,11 +55,11 @@ class TestCase extends BaseTestCase
             $table->string('name');
         });
 
-        require_once __DIR__.'/../vendor/orchestra/testbench-core/laravel/migrations/2014_10_12_000000_testbench_create_users_table.php';
-        require_once __DIR__.'/../database/migrations/create_wishes_table.php.stub';
+        $users = require __DIR__.'/../vendor/orchestra/testbench-core/laravel/migrations/2014_10_12_000000_testbench_create_users_table.php';
+        $wishes = require __DIR__.'/../database/migrations/create_wishes_table.php.stub';
 
-        (new TestbenchCreateUsersTable())->up();
-        (new CreateWishesTable())->up();
+        $users->up();
+        $wishes->up();
 
         Relation::morphMap([
             'product' => Product::class,
