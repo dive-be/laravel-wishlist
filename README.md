@@ -1,6 +1,7 @@
 # ❤️ - Manage your users' wishes in a Laravel app
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/dive-be/laravel-wishlist.svg?style=flat-square)](https://packagist.org/packages/dive-be/laravel-wishlist)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/dive-be/laravel-wishlist/Tests?label=tests)](https://github.com/dive-be/laravel-wishlist/actions?query=workflow%3ATests+branch%3Amaster)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Total Downloads](https://img.shields.io/packagist/dt/dive-be/laravel-wishlist.svg?style=flat-square)](https://packagist.org/packages/dive-be/laravel-wishlist)
 
