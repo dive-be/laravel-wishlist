@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-wishlist` will be documented in this file.
 
+## 1.2.1 - 2022-09-19
+
+### Fixed
+
+- Allow models with integer keys
+
 ## 1.2.0 - 2022-02-11
 
 ### Added
