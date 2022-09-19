@@ -11,9 +11,9 @@ use Tests\Fakes\Sample;
 
 beforeEach(function () {
     $this->collection = WishCollection::make([
-        Wish::make('1', product()),
-        Wish::make('2', $this->wishable = sample()),
-        Wish::make('333', product()),
+        Wish::make('09c09144-42fd-47b2-98b9-396687eb23ca', product()),
+        Wish::make('e133a571-ddde-49ff-9657-b76d25a42901', $this->wishable = sample()),
+        Wish::make('d33886a4-491e-4dce-894d-9569650dd658', product()),
     ]);
 });
 
@@ -21,7 +21,7 @@ it('can find a wish using a wishable', function () {
     expect($this->collection->find($this->wishable))
         ->toBeInstanceOf(Wish::class)
         ->wishable->toBeInstanceOf(Sample::class)
-        ->id->toBe('2');
+        ->id->toBe('e133a571-ddde-49ff-9657-b76d25a42901');
 });
 
 it('can determine existence using a wishable', function () {
@@ -111,3 +111,14 @@ it('can replace plain array representations of wishes with a hydrated wish insta
 it('throws if the eager load is ambiguous', function () {
     $this->collection->load('variant');
 })->throws(LogicException::class);
+
+it('can find a wish whose wishable has an integer key', function () {
+    $collection = $this->collection->slice(0, 1)->transform(static fn ($wish) => $wish->toArray());
+
+    $wish = $collection->find('09c09144-42fd-47b2-98b9-396687eb23ca');
+
+    expect($wish)
+        ->toBeInstanceOf(Wish::class)
+        ->and($collection->first())
+        ->toBeInstanceOf(Wish::class);
+});

@@ -13,6 +13,8 @@ class Product extends Model implements Wishable
 
     public $timestamps = false;
 
+    protected $casts = ['id' => 'integer'];
+
     protected $guarded = [];
 
     public function variant(): BelongsTo

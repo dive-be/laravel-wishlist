@@ -150,7 +150,7 @@ class WishCollection extends Collection
         return $this->reject(Comparator::for($id));
     }
 
-    private function findModel(string $type, string $id): Wishable
+    private function findModel(string $type, int|string $id): Wishable
     {
         return call_user_func([$this->morphModel($type), 'find'], $id);
     }
