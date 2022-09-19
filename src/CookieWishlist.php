@@ -25,7 +25,7 @@ class CookieWishlist implements Wishlist
         ['domain' => $this->domain, 'max_age' => $this->maxAge, 'name' => $this->name] = $config;
 
         $this->wishlist = InMemoryWishlist::make(
-            transform($request->cookie($this->name), fn ($cookie) => unserialize($cookie), [])
+            transform($request->cookie($this->name), unserialize(...), [])
         );
     }
 

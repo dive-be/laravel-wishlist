@@ -10,14 +10,12 @@ use Illuminate\Http\Request;
 class MigrateWishes
 {
     public function __construct(
-        private WishlistManager $wishlist,
+        private readonly WishlistManager $wishlist,
     ) {}
 
     public function handle(Request $request, Closure $next)
     {
-        if ($this->wishlist->auth()->check()
-            && $request->hasCookie($this->wishlist->config('cookie.name'))
-        ) {
+        if ($this->wishlist->auth()->check() && $request->hasCookie($this->wishlist->config('cookie.name'))) {
             app(MigrateWishesAction::class)->execute();
         }
 

@@ -8,6 +8,3 @@ parameters:
     level: 5
 
     checkMissingIterableValueType: false
-
-    ignoreErrors:
-        - '#\$wishable of static method Dive\\Wishlist\\Wish::make\(\) expects Dive\\Wishlist\\Contracts\\Wishable, Illuminate\\Database\\Eloquent\\Model\|null given.#'

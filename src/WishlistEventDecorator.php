@@ -13,8 +13,8 @@ class WishlistEventDecorator implements Wishlist
     use Makeable;
 
     public function __construct(
-        private Wishlist $next,
-        private Dispatcher $dispatcher,
+        private readonly Wishlist $next,
+        private readonly Dispatcher $dispatcher,
     ) {}
 
     public function add(Wishable $wishable): Wish

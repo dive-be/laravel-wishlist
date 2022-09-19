@@ -33,13 +33,13 @@ final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 
     public static function setManagerResolver(Closure $resolver)
     {
-        static::$managerResolver = $resolver;
+        self::$managerResolver = $resolver;
     }
 
     public function delete(): bool
     {
-        if (isset(static::$managerResolver)) {
-            return call_user_func(static::$managerResolver)->remove($this);
+        if (isset(self::$managerResolver)) {
+            return call_user_func(self::$managerResolver)->remove($this);
         }
 
         return false;
@@ -71,12 +71,12 @@ final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 
     public function resolveRouteBinding($value, $field = null): ?self
     {
-        return isset(static::$managerResolver)
-            ? call_user_func(static::$managerResolver)->find($value)
+        return isset(self::$managerResolver)
+            ? call_user_func(self::$managerResolver)->find($value)
             : null;
     }
 
-    public function resolveChildRouteBinding($childType, $value, $field)
+    public function resolveChildRouteBinding($childType, $value, $field): never
     {
         $class = self::class;
 
@@ -102,7 +102,7 @@ final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
     public function __get(string $name): mixed
     {
         if (! array_key_exists($name, $this->attributes)) {
-            $class = static::class;
+            $class = self::class;
 
             throw new Exception("Undefined property: {$class}::{$name}");
         }

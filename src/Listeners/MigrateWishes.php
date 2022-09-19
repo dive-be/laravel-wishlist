@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class MigrateWishes
 {
     public function __construct(
-        private Request $request,
-        private WishlistManager $wishlist,
+        private readonly Request $request,
+        private readonly WishlistManager $wishlist,
     ) {}
 
     public function handle()

@@ -18,7 +18,7 @@ class EloquentWishlist implements Wishlist
     private array $constraints;
 
     public function __construct(
-        private Model $model,
+        private readonly Model $model,
         int $user,
         string $scope,
     ) {
@@ -44,8 +44,8 @@ class EloquentWishlist implements Wishlist
             ->newQuery()
             ->with('wishable')
             ->get()
-            ->map(static fn ($model) => Wish::of($model))
-            ->pipe(static fn ($collection) => WishCollection::make($collection)));
+            ->map(Wish::of(...))
+            ->pipe(WishCollection::make(...)));
     }
 
     public function count(): int
@@ -57,7 +57,7 @@ class EloquentWishlist implements Wishlist
     {
         return transform($this->newQuery()
             ->where($id instanceof Wishable ? $this->morphColumns($id) : ['uuid' => $id])
-            ->first(), static fn (Model $wish) => Wish::of($wish));
+            ->first(), Wish::of(...));
     }
 
     public function has(Wishable $wishable): bool
