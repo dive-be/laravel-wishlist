@@ -7,9 +7,9 @@ use Dive\Wishlist\Contracts\Wishlist;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
-class WishlistServiceProvider extends ServiceProvider
+final class WishlistServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
@@ -20,7 +20,7 @@ class WishlistServiceProvider extends ServiceProvider
         Wish::setManagerResolver(fn () => $this->app['wishlist']);
     }
 
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/wishlist.php', 'wishlist');
 
@@ -29,14 +29,14 @@ class WishlistServiceProvider extends ServiceProvider
         $this->app->alias(WishlistManager::class, 'wishlist');
     }
 
-    private function registerCommands()
+    private function registerCommands(): void
     {
         $this->commands([
             InstallPackageCommand::class,
         ]);
     }
 
-    private function registerConfig()
+    private function registerConfig(): void
     {
         $config = 'wishlist.php';
 
@@ -45,7 +45,7 @@ class WishlistServiceProvider extends ServiceProvider
         ], 'config');
     }
 
-    private function registerMigration()
+    private function registerMigration(): void
     {
         $migration = 'create_wishes_table.php';
         $doesntExist = Collection::make(glob($this->app->databasePath('migrations/*.php')))

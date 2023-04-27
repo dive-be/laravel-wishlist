@@ -4,13 +4,11 @@ namespace Dive\Wishlist\Actions;
 
 use Dive\Wishlist\WishlistManager;
 
-class MigrateWishesAction
+final readonly class MigrateWishesAction
 {
-    public function __construct(
-        private readonly WishlistManager $wishlist,
-    ) {}
+    public function __construct(private WishlistManager $wishlist) {}
 
-    public function execute()
+    public function execute(): void
     {
         $cookie = $this->wishlist->driver(WishlistManager::COOKIE);
 

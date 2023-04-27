@@ -31,7 +31,7 @@ final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
         return (new self())->fill(compact('id', 'wishable'));
     }
 
-    public static function setManagerResolver(Closure $resolver)
+    public static function setManagerResolver(Closure $resolver): void
     {
         self::$managerResolver = $resolver;
     }

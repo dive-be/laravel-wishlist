@@ -5,7 +5,6 @@ namespace Tests;
 use Dive\Wishlist\Wish;
 use Exception;
 use Tests\Fakes\Product;
-use function Pest\Laravel\mock;
 
 beforeEach(function () {
     $this->wish = Wish::make('1337', new Product(['id' => 9876]));
@@ -39,7 +38,7 @@ it('can retrieve the wishable', function () {
 });
 
 it('can be route model bound', function () {
-    mock('wishlist')
+    $this->mock('wishlist')
         ->shouldReceive('find')
         ->once()
         ->withArgs(fn ($id) => $id === 'Dive Hard')
@@ -52,7 +51,7 @@ it('can be route model bound', function () {
 });
 
 it('can be deleted', function () {
-    mock('wishlist')
+    $this->mock('wishlist')
         ->shouldReceive('remove')
         ->once()
         ->withArgs(fn ($wish) => $wish === $this->wish)

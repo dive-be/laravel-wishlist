@@ -5,7 +5,7 @@ namespace Dive\Wishlist;
 use Closure;
 use Dive\Wishlist\Contracts\Wishable;
 
-final class Comparator
+final readonly class Comparator
 {
     public static function for(string|Wishable $comparable): Closure
     {

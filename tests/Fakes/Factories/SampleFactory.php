@@ -5,11 +5,11 @@ namespace Tests\Fakes\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Tests\Fakes\Sample;
 
-class SampleFactory extends Factory
+final class SampleFactory extends Factory
 {
     protected $model = Sample::class;
 
-    public function definition()
+    public function definition(): array
     {
         return [
             'purveyor_id' => PurveyorFactory::new(),

@@ -7,7 +7,7 @@ use Dive\Wishlist\Models\Concerns\CanBeWished;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Sample extends Model implements Wishable
+final class Sample extends Model implements Wishable
 {
     use CanBeWished;
 

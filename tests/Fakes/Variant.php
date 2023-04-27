@@ -4,7 +4,7 @@ namespace Tests\Fakes;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Variant extends Model
+final class Variant extends Model
 {
     public $timestamps = false;
 

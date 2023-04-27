@@ -3,10 +3,9 @@
 namespace Tests;
 
 use Dive\Wishlist\Models\Wish;
-use function Pest\Laravel\assertDatabaseCount;
 
 test('user can (un)wish something', function () {
-    assertDatabaseCount(Wish::class, 0);
+    $this->assertDatabaseCount(Wish::class, 0);
 
     ($user = user())->wish($product = product());
 

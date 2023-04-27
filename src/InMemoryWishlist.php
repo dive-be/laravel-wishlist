@@ -7,7 +7,7 @@ use Dive\Wishlist\Contracts\Wishlist;
 use Dive\Wishlist\Support\Makeable;
 use Illuminate\Support\Str;
 
-class InMemoryWishlist implements Wishlist
+final class InMemoryWishlist implements Wishlist
 {
     use Makeable;
 

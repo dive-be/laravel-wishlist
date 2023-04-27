@@ -2,8 +2,6 @@
 
 namespace Dive\Wishlist\Support;
 
-use Closure;
-
 trait PoorMansCaching
 {
     private array $cache = [
@@ -11,14 +9,14 @@ trait PoorMansCaching
         'pristine' => [],
     ];
 
-    private function markAsDirty()
+    private function markAsDirty(): void
     {
         foreach ($this->cache['pristine'] as $key => $_) {
             $this->cache['pristine'][$key] = false;
         }
     }
 
-    private function remember(Closure $callback)
+    private function remember(\Closure $callback): mixed
     {
         [$one, $caller] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 

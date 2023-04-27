@@ -8,14 +8,11 @@ use Dive\Wishlist\Events\WishlistTouched;
 use Dive\Wishlist\Support\Makeable;
 use Illuminate\Contracts\Events\Dispatcher;
 
-class WishlistEventDecorator implements Wishlist
+final readonly class WishlistEventDecorator implements Wishlist
 {
     use Makeable;
 
-    public function __construct(
-        private readonly Wishlist $next,
-        private readonly Dispatcher $dispatcher,
-    ) {}
+    public function __construct(private Wishlist $next, private Dispatcher $dispatcher) {}
 
     public function add(Wishable $wishable): Wish
     {
@@ -68,14 +65,14 @@ class WishlistEventDecorator implements Wishlist
         });
     }
 
-    private function dispatchTouchedEvent()
+    private function dispatchTouchedEvent(): void
     {
         $this->dispatcher->dispatch(
             WishlistTouched::make($this->count())
         );
     }
 
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         return $this->next->{$name}(...$arguments);
     }

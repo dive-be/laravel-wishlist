@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use LogicException;
 
-class WishCollection extends Collection
+final class WishCollection extends Collection
 {
     private bool $hydrated;
 

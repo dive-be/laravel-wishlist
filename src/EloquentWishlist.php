@@ -10,18 +10,15 @@ use Dive\Wishlist\Support\PoorMansCaching;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
-class EloquentWishlist implements Wishlist
+final class EloquentWishlist implements Wishlist
 {
     use Makeable;
     use PoorMansCaching;
 
     private array $constraints;
 
-    public function __construct(
-        private readonly Model $model,
-        int $user,
-        string $scope,
-    ) {
+    public function __construct(private readonly Model $model, int $user, string $scope)
+    {
         $this->constraints = ['user_id' => $user, 'scope' => $scope];
     }
 

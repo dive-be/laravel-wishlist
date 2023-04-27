@@ -11,7 +11,7 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 use Tests\Fakes\Product;
 use Tests\Fakes\Sample;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
     protected function setUp(): void
     {
@@ -20,19 +20,19 @@ class TestCase extends BaseTestCase
         $this->setUpDatabase();
     }
 
-    protected function getPackageAliases($app)
+    protected function getPackageAliases($app): array
     {
         return [
             'Wishlist' => Wishlist::class,
         ];
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [WishlistServiceProvider::class];
     }
 
-    protected function setUpDatabase()
+    protected function setUpDatabase(): void
     {
         Schema::create('variants', function (Blueprint $table) {
             $table->id();

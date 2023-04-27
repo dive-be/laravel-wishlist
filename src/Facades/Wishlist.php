@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Facade;
  * @method static int                             purge()
  * @method static bool                            remove(string|\Dive\Wishlist\Wish|\Dive\Wishlist\Contracts\Wishable $id)
  */
-class Wishlist extends Facade
+final class Wishlist extends Facade
 {
     public static function fake(): InMemoryWishlist
     {
-        static::swap($fake = InMemoryWishlist::make());
+        self::swap($fake = InMemoryWishlist::make());
 
         return $fake;
     }

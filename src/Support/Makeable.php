@@ -4,7 +4,7 @@ namespace Dive\Wishlist\Support;
 
 trait Makeable
 {
-    public static function make(...$arguments)
+    public static function make(...$arguments): static
     {
         return new self(...$arguments);
     }

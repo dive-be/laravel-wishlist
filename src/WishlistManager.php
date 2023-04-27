@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Manager;
 
-class WishlistManager extends Manager implements Wishlist
+final class WishlistManager extends Manager implements Wishlist
 {
     public const ARRAY = 'array';
     public const COOKIE = 'cookie';

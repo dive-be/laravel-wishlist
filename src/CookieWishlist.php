@@ -8,7 +8,7 @@ use Dive\Wishlist\Support\Makeable;
 use Illuminate\Contracts\Cookie\QueueingFactory;
 use Illuminate\Http\Request;
 
-class CookieWishlist implements Wishlist
+final readonly class CookieWishlist implements Wishlist
 {
     use Makeable;
 
@@ -86,7 +86,7 @@ class CookieWishlist implements Wishlist
         });
     }
 
-    private function enqueue()
+    private function enqueue(): void
     {
         $this->jar->queue(
             $this->jar->make(
@@ -98,7 +98,7 @@ class CookieWishlist implements Wishlist
         );
     }
 
-    private function forget()
+    private function forget(): void
     {
         $this->jar->queue(
             $this->jar->forget(name: $this->name, domain: $this->domain)

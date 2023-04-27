@@ -4,11 +4,9 @@ namespace Dive\Wishlist\Events;
 
 use Dive\Wishlist\Support\Makeable;
 
-class WishlistTouched
+final readonly class WishlistTouched
 {
     use Makeable;
 
-    public function __construct(
-        public readonly int $count,
-    ) {}
+    public function __construct(public int $count) {}
 }

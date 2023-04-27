@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Tests\Fakes\Product;
 
-class ProductFactory extends Factory
+final class ProductFactory extends Factory
 {
     protected $model = Product::class;
 
-    public function definition()
+    public function definition(): array
     {
         return [
             'variant_id' => VariantFactory::new(),

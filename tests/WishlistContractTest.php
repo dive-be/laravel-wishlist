@@ -93,17 +93,17 @@ it('can remove a wish', function (Wishlist $wishlist, Closure $valueRetriever) {
     expect($resultB)->toBeFalse();
     expect($wishlist->isEmpty())->toBeTrue();
 })->with('wishlists')->with([
-    fn () => fn ($wish) => $wish,
-    fn () => fn ($wish) => $wish->id,
-    fn () => fn ($wish) => $wish->wishable,
+    [fn ($wish) => $wish],
+    [fn ($wish) => $wish->id],
+    [fn ($wish) => $wish->wishable],
 ]);
 
 dataset('wishlists', [
-    fn () => InMemoryWishlist::make(),
-    fn () => EloquentWishlist::make(new Model(), user()->getKey(), '*'),
-    fn () => CookieWishlist::make(new CookieJar(), new Request(), [
+    [fn () => InMemoryWishlist::make()],
+    [fn () => EloquentWishlist::make(new Model(), user()->getKey(), '*')],
+    [fn () => CookieWishlist::make(new CookieJar(), new Request(), [
         'domain' => '.localhost',
         'max_age' => 1337,
         'name' => 'wishlist',
-    ]),
+    ])],
 ]);
