@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-wishlist` will be documented in this file.
 
+## 1.2.2 - 2023-04-27
+
+### Fixed
+
+- `wishable` relation now ignores any active global scopes
+
 ## 1.2.1 - 2022-09-19
 
 ### Fixed
