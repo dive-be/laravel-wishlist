@@ -22,6 +22,6 @@ class Wish extends Model
 
     public function wishable(): MorphTo
     {
-        return $this->morphTo();
+        return $this->morphTo()->withoutGlobalScopes();
     }
 }
