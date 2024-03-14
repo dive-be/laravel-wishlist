@@ -1,5 +1,5 @@
 includes:
-    - ./vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/larastan/larastan/extension.neon
 
 parameters:
     paths:
@@ -8,3 +8,6 @@ parameters:
     level: 5
 
     checkMissingIterableValueType: false
+
+    ignoreErrors:
+        - '#Parameter \#2 \$wishable .*#'

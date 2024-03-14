@@ -2,24 +2,38 @@
 
 namespace Tests;
 
+use Dive\Wishlist\Contracts\Wishlist;
 use Dive\Wishlist\EloquentWishlist;
 use Dive\Wishlist\Models\Wish as Model;
 use Dive\Wishlist\Wish;
 use Dive\Wishlist\WishCollection;
+use PHPUnit\Framework\Attributes\Test;
 
-it('can merge a collection of wishes with its own', function () {
-    $wishlist = EloquentWishlist::make(new Model(), user()->getKey(), '*');
+final class EloquentWishlistTest extends TestCase
+{
+    use WishlistContractTests;
 
-    $wishlist->add(product());
-    $sampleA = $wishlist->add(sample());
-    $productA = $wishlist->add(product());
+    #[Test]
+    public function it_can_merge_a_collection_of_wishes_with_its_own(): void
+    {
+        $wishlist = $this->getInstance();
 
-    $wishlist->merge(WishCollection::make([
-        $sampleA, // duplicate
-        Wish::make('1234', sample()),
-        $productA, // duplicate
-        Wish::make('5678', product()),
-    ]));
+        $wishlist->add($this->product());
+        $sampleA = $wishlist->add($this->sample());
+        $productA = $wishlist->add($this->product());
 
-    expect($wishlist->count())->toBe(5);
-});
+        $wishlist->merge(WishCollection::make([
+            $sampleA, // duplicate
+            Wish::make('1234', $this->sample()),
+            $productA, // duplicate
+            Wish::make('5678', $this->product()),
+        ]));
+
+        $this->assertCount(5, $wishlist);
+    }
+
+    protected function getInstance(): Wishlist
+    {
+        return EloquentWishlist::make(new Model(), $this->user()->getKey(), '*');
+    }
+}

@@ -2,21 +2,31 @@
 
 namespace Tests;
 
-use function Pest\Laravel\artisan;
+use PHPUnit\Framework\Attributes\Test;
 
-afterEach(function () {
-    file_exists(config_path('wishlist.php')) && unlink(config_path('wishlist.php'));
-    array_map('unlink', glob(database_path('migrations/*_create_wishes_table.php')));
-});
+final class InstallPackageTest extends TestCase
+{
+    protected function tearDown(): void
+    {
+        parent::tearDown();
 
-it('copies the config', function () {
-    artisan('wishlist:install')->execute();
+        file_exists(config_path('wishlist.php')) && unlink(config_path('wishlist.php'));
+        array_map('unlink', glob(database_path('migrations/*_create_wishes_table.php')));
+    }
 
-    expect(file_exists(config_path('wishlist.php')))->toBeTrue();
-});
+    #[Test]
+    public function it_copies_the_config(): void
+    {
+        $this->artisan('wishlist:install')->execute();
 
-it('copies the migration', function () {
-    artisan('wishlist:install')->execute();
+        $this->assertTrue(file_exists(config_path('wishlist.php')));
+    }
 
-    expect(glob(database_path('migrations/*_create_wishes_table.php')))->toHaveCount(1);
-});
+    #[Test]
+    public function it_copies_the_migration(): void
+    {
+        $this->artisan('wishlist:install')->execute();
+
+        $this->assertCount(1, glob(database_path('migrations/*_create_wishes_table.php')));
+    }
+}

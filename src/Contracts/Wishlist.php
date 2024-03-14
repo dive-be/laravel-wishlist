@@ -2,16 +2,15 @@
 
 namespace Dive\Wishlist\Contracts;
 
+use Countable;
 use Dive\Wishlist\Wish;
 use Dive\Wishlist\WishCollection;
 
-interface Wishlist
+interface Wishlist extends Countable
 {
     public function add(Wishable $wishable): Wish;
 
     public function all(): WishCollection;
-
-    public function count(): int;
 
     public function find(string|Wishable $id): ?Wish;
 

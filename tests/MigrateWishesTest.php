@@ -4,24 +4,30 @@ namespace Tests;
 
 use Dive\Wishlist\Actions\MigrateWishesAction;
 use Dive\Wishlist\WishlistManager;
+use PHPUnit\Framework\Attributes\Test;
 
-it('can migrate the wishes from the cookie driver to the eloquent driver', function () {
-    $this->actingAs(user());
+final class MigrateWishesTest extends TestCase
+{
+    #[Test]
+    public function it_can_migrate_the_wishes_from_the_cookie_driver_to_the_eloquent_driver(): void
+    {
+        $this->actingAs($this->user());
 
-    $manager = app(WishlistManager::class);
+        $manager = app(WishlistManager::class);
 
-    $cookie = $manager->driver(WishlistManager::COOKIE);
-    $cookie->add(product());
-    $cookie->add(sample());
-    $cookie->add(product());
+        $cookie = $manager->driver(WishlistManager::COOKIE);
+        $cookie->add($this->product());
+        $cookie->add($this->sample());
+        $cookie->add($this->product());
 
-    $eloquent = $manager->driver(WishlistManager::ELOQUENT);
+        $eloquent = $manager->driver(WishlistManager::ELOQUENT);
 
-    expect($cookie->count())->toBe(3);
-    expect($eloquent->count())->toBe(0);
+        $this->assertCount(3, $cookie);
+        $this->assertCount(0, $eloquent);
 
-    (new MigrateWishesAction($manager))->execute();
+        (new MigrateWishesAction($manager))->execute();
 
-    expect($cookie->count())->toBe(0);
-    expect($eloquent->count())->toBe(3);
-});
+        $this->assertCount(0, $cookie);
+        $this->assertCount(3, $eloquent);
+    }
+}

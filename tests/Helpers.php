@@ -10,22 +10,25 @@ use Tests\Fakes\Product;
 use Tests\Fakes\Sample;
 use Tests\Fakes\User;
 
-function product(): Product
+trait Helpers
 {
-    return ProductFactory::new()->create();
-}
+    protected static function product(): Product
+    {
+        return ProductFactory::new()->create();
+    }
 
-function sample(): Sample
-{
-    return SampleFactory::new()->create();
-}
+    protected static function sample(): Sample
+    {
+        return SampleFactory::new()->create();
+    }
 
-function user(): User
-{
-    return UserFactory::new()->create();
-}
+    protected static function user(): User
+    {
+        return UserFactory::new()->create();
+    }
 
-function wishable(): Wishable
-{
-    return call_user_func(['\Tests\product', '\Tests\sample'][rand(0, 1)]);
+    protected static function wishable(): Wishable
+    {
+        return call_user_func([self::product(...), self::sample(...)][rand(0, 1)]);
+    }
 }

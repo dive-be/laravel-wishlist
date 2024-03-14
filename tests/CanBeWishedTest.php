@@ -3,13 +3,20 @@
 namespace Tests;
 
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use PHPUnit\Framework\Attributes\Test;
 
-test('model can form a "morph key"', function () {
-    expect(product()->getMorphKey())->toBe('product-1');
-});
+final class CanBeWishedTest extends TestCase
+{
+    #[Test]
+    public function model_can_form_a_morph_key(): void
+    {
+        $this->assertSame('product-1', $this->product()->getMorphKey());
+    }
 
-test('model has a polymorphic wish relation', function () {
-    expect(product()->wish())
-        ->toBeInstanceOf(MorphOne::class)
-        ->getQualifiedMorphType()->toBe('wishes.wishable_type');
-});
+    #[Test]
+    public function model_has_a_polymorphic_wish_relation(): void
+    {
+        $this->assertInstanceOf(MorphOne::class, $this->product()->wish());
+        $this->assertSame('wishes.wishable_type', $this->product()->wish()->getQualifiedMorphType());
+    }
+}

@@ -13,6 +13,8 @@ use Tests\Fakes\Sample;
 
 abstract class TestCase extends BaseTestCase
 {
+    use Helpers;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,7 +57,7 @@ abstract class TestCase extends BaseTestCase
             $table->string('name');
         });
 
-        $users = require __DIR__ . '/../vendor/orchestra/testbench-core/laravel/migrations/2014_10_12_000000_testbench_create_users_table.php';
+        $users = require __DIR__ . '/../vendor/orchestra/testbench-core/laravel/migrations/0001_01_01_000000_testbench_create_users_table.php';
         $wishes = require __DIR__ . '/../database/migrations/create_wishes_table.php.stub';
 
         $users->up();

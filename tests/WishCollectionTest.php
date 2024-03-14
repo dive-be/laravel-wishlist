@@ -6,119 +6,179 @@ use Dive\Wishlist\Wish;
 use Dive\Wishlist\WishCollection;
 use Illuminate\Support\Collection;
 use LogicException;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\Fakes\Product;
 use Tests\Fakes\Sample;
 
-beforeEach(function () {
-    $this->collection = WishCollection::make([
-        Wish::make('09c09144-42fd-47b2-98b9-396687eb23ca', product()),
-        Wish::make('e133a571-ddde-49ff-9657-b76d25a42901', $this->wishable = sample()),
-        Wish::make('d33886a4-491e-4dce-894d-9569650dd658', product()),
-    ]);
-});
+final class WishCollectionTest extends TestCase
+{
+    private WishCollection $collection;
 
-it('can find a wish using a wishable', function () {
-    expect($this->collection->find($this->wishable))
-        ->toBeInstanceOf(Wish::class)
-        ->wishable->toBeInstanceOf(Sample::class)
-        ->id->toBe('e133a571-ddde-49ff-9657-b76d25a42901');
-});
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-it('can determine existence using a wishable', function () {
-    expect($this->collection->exists($this->wishable))->toBeTrue();
-    expect($this->collection->exists(product()))->toBeFalse();
-});
+        $this->collection = WishCollection::make([
+            Wish::make('09c09144-42fd-47b2-98b9-396687eb23ca', $this->product()),
+            Wish::make('e133a571-ddde-49ff-9657-b76d25a42901', $this->wishable = $this->sample()),
+            Wish::make('d33886a4-491e-4dce-894d-9569650dd658', $this->product()),
+        ]);
+    }
 
-it('can exclude a single wish', function () {
-    expect($this->collection->without($this->wishable))
-        ->toHaveCount(2)
-        ->exists($this->wishable)->toBeFalse();
-});
+    #[Test]
+    public function it_can_find_a_wish_using_a_wishable(): void
+    {
+        $wish = $this->collection->find($this->wishable);
 
-it('can retrieve the with ids', function () {
-    expect($this->collection->ids())
-        ->toBeInstanceOf(Collection::class)
-        ->not->toBeInstanceOf(WishCollection::class)
-        ->toMatchArray($this->collection->map->id);
-});
+        $this->assertSame('e133a571-ddde-49ff-9657-b76d25a42901', $wish->id);
+        $this->assertInstanceOf(Wish::class, $wish);
+        $this->assertInstanceOf(Sample::class, $wish->wishable);
+    }
 
-it('can retrieve the wishables', function () {
-    expect($wishables = $this->collection->wishables())
-        ->toBeInstanceOf(Collection::class)
-        ->not->toBeInstanceOf(WishCollection::class);
+    #[Test]
+    public function it_can_determine_existence_using_a_wishable(): void
+    {
+        $this->assertTrue($this->collection->exists($this->wishable));
+        $this->assertFalse($this->collection->exists($this->product()));
+    }
 
-    $wishables->each(function ($wishable, $idx) {
-        expect($wishable->is($this->collection->get($idx)->wishable))->toBeTrue();
-    });
-});
+    #[Test]
+    public function it_can_exclude_a_single_wish(): void
+    {
+        $collection = $this->collection->without($this->wishable);
 
-it('can group wishes by wishable morph type', function () {
-    expect($this->collection->groupByType())
-        ->toBeInstanceOf(Collection::class)
-        ->not->toBeInstanceOf(WishCollection::class)
-        ->toHaveCount(2)
-        ->each->toBeInstanceOf(WishCollection::class);
-});
+        $this->assertCount(2, $collection);
+        $this->assertFalse($collection->exists($this->wishable));
+    }
 
-it('can retrieve wishes of a single morph type', function (string $morphType, int $count, string $type) {
-    expect($this->collection->ofType($morphType))
-        ->toBeInstanceOf(WishCollection::class)
-        ->toHaveCount($count)
-        ->each(fn ($expect) => $expect->wishable->toBeInstanceOf($type));
-})->with([
-    [Product::class, 2, Product::class],
-    ['product', 2, Product::class],
-    [Sample::class, 1, Sample::class],
-    ['sample', 1, Sample::class],
-]);
+    #[Test]
+    public function it_can_retrieve_the_with_ids(): void
+    {
+        $this->assertInstanceOf(Collection::class, $this->collection->ids());
+        $this->assertNotInstanceOf(WishCollection::class, $this->collection->ids());
+        $this->assertSame([
+            '09c09144-42fd-47b2-98b9-396687eb23ca',
+            'e133a571-ddde-49ff-9657-b76d25a42901',
+            'd33886a4-491e-4dce-894d-9569650dd658',
+        ], $this->collection->ids()->all());
+    }
 
-it('can eager load the relations of wishables', function () {
-    $products = $this->collection->ofType(Product::class);
-    $samples = $this->collection->ofType(Sample::class);
+    #[Test]
+    public function it_can_retrieve_the_wishables(): void
+    {
+        $wishables = $this->collection->wishables();
 
-    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeFalse());
-    expect($samples)->each(fn ($expect) => $expect->wishable->relationLoaded('purveyor')->toBeFalse());
+        $wishables->each(function ($wishable, $idx) {
+            $this->assertTrue($wishable->is($this->collection->get($idx)->wishable));
+        });
+    }
 
-    $this->collection->load([
-        Product::class => 'variant',
-        Sample::class => 'purveyor',
-    ]);
+    #[Test]
+    public function it_can_group_wishes_by_wishable_morph_type(): void
+    {
+        $grouped = $this->collection->groupByType();
 
-    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeTrue());
-    expect($samples)->each(fn ($expect) => $expect->wishable->relationLoaded('purveyor')->toBeTrue());
-});
+        $this->assertInstanceOf(Collection::class, $grouped);
+        $this->assertNotInstanceOf(WishCollection::class, $grouped);
+        $this->assertCount(2, $grouped);
+        $grouped->each(function ($group) {
+            $this->assertInstanceOf(WishCollection::class, $group);
+        });
+    }
 
-it('can eager load without a type-relation map when unambiguous', function () {
-    $products = $this->collection->ofType(Product::class);
+    #[Test]
+    public function it_can_retrieve_wishes_of_a_single_morph_type(): void
+    {
+        $products = $this->collection->ofType(Product::class);
+        $samples = $this->collection->ofType(Sample::class);
 
-    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeFalse());
+        $this->assertInstanceOf(WishCollection::class, $products);
+        $this->assertInstanceOf(WishCollection::class, $samples);
+        $this->assertCount(2, $products);
+        $this->assertCount(1, $samples);
+        $products->each(function ($wish) {
+            $this->assertInstanceOf(Product::class, $wish->wishable);
+        });
+        $samples->each(function ($wish) {
+            $this->assertInstanceOf(Sample::class, $wish->wishable);
+        });
+    }
 
-    $products->load('variant');
+    #[Test]
+    public function it_can_eager_load_the_relations_of_wishables(): void
+    {
+        $products = $this->collection->ofType(Product::class);
+        $samples = $this->collection->ofType(Sample::class);
 
-    expect($products)->each(fn ($expect) => $expect->wishable->relationLoaded('variant')->toBeTrue());
-});
+        $products->each(function ($wish) {
+            $this->assertFalse($wish->wishable->relationLoaded('variant'));
+        });
+        $samples->each(function ($wish) {
+            $this->assertFalse($wish->wishable->relationLoaded('purveyor'));
+        });
 
-it('can replace plain array representations of wishes with a hydrated wish instance', function () {
-    $collection = WishCollection::make($this->collection->map->toArray()->all());
+        $this->collection->load([
+            Product::class => 'variant',
+            Sample::class => 'purveyor',
+        ]);
 
-    expect($collection)->each->toBeArray()->toHaveKeys(['id', 'wishable']);
+        $products->each(function ($wish) {
+            $this->assertTrue($wish->wishable->relationLoaded('variant'));
+        });
+        $samples->each(function ($wish) {
+            $this->assertTrue($wish->wishable->relationLoaded('purveyor'));
+        });
+    }
 
-    $collection->hydrate();
+    #[Test]
+    public function it_can_eager_load_without_a_type_relation_map_when_unambiguous(): void
+    {
+        $products = $this->collection->ofType(Product::class);
 
-    expect($collection)->each->toBeInstanceOf(Wish::class);
-});
+        $products->each(function ($wish) {
+            $this->assertFalse($wish->wishable->relationLoaded('variant'));
+        });
 
-it('throws if the eager load is ambiguous', function () {
-    $this->collection->load('variant');
-})->throws(LogicException::class);
+        $products->load('variant');
 
-it('can find a wish whose wishable has an integer key', function () {
-    $collection = $this->collection->slice(0, 1)->transform(static fn ($wish) => $wish->toArray());
+        $products->each(function ($wish) {
+            $this->assertTrue($wish->wishable->relationLoaded('variant'));
+        });
+    }
 
-    $wish = $collection->find('09c09144-42fd-47b2-98b9-396687eb23ca');
+    #[Test]
+    public function it_can_replace_plain_array_representations_of_wishes_with_a_hydrated_wish_instance(): void
+    {
+        $collection = WishCollection::make($this->collection->map->toArray()->all());
 
-    expect($wish)
-        ->toBeInstanceOf(Wish::class)
-        ->and($collection->first())
-        ->toBeInstanceOf(Wish::class);
-});
+        $collection->each(function ($wish) {
+            $this->assertIsArray($wish);
+            $this->assertArrayHasKey('id', $wish);
+            $this->assertArrayHasKey('wishable', $wish);
+        });
+
+        $collection->hydrate();
+
+        $collection->each(function ($wish) {
+            $this->assertInstanceOf(Wish::class, $wish);
+        });
+    }
+
+    #[Test]
+    public function it_throws_if_the_eager_load_is_ambiguous(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->collection->load('variant');
+    }
+
+    #[Test]
+    public function it_can_find_a_wish_whose_wishable_has_an_integer_key(): void
+    {
+        $collection = $this->collection->slice(0, 1)->transform(fn ($wish) => $wish->toArray());
+
+        $wish = $collection->find('09c09144-42fd-47b2-98b9-396687eb23ca');
+
+        $this->assertInstanceOf(Wish::class, $wish);
+        $this->assertSame($collection->first(), $wish);
+    }
+}

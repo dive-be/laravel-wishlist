@@ -3,25 +3,35 @@
 namespace Tests;
 
 use Dive\Wishlist\Models\Wish;
+use PHPUnit\Framework\Attributes\Test;
 
-test('user can (un)wish something', function () {
-    $this->assertDatabaseCount(Wish::class, 0);
+final class InteractsWithWishlistTest extends TestCase
+{
+    #[Test]
+    public function user_can_wish_or_unwish_something(): void
+    {
+        $this->assertDatabaseCount(Wish::class, 0);
 
-    ($user = user())->wish($product = product());
+        $user = $this->user();
+        $user->wish($product = $this->product());
 
-    expect($wish = Wish::first())->toBeInstanceOf(Wish::class);
+        $this->assertInstanceOf(Wish::class, $wish = Wish::first());
 
-    $user->unwish($product);
+        $user->unwish($product);
 
-    expect($wish->refresh()->trashed())->toBeTrue();
-});
+        $this->assertTrue($wish->refresh()->trashed());
+    }
 
-test('user can retrieve his/her own wishlist', function () {
-    ($user = user())->wish(product());
-    $user->wish($product = product());
-    $user->wish(sample());
-    $user->wish(product());
-    $user->unwish($product);
+    #[Test]
+    public function user_can_retrieve_their_own_wishlist(): void
+    {
+        $user = $this->user();
+        $user->wish($this->product());
+        $user->wish($product = $this->product());
+        $user->wish($this->sample());
+        $user->wish($this->product());
+        $user->unwish($product);
 
-    expect($user->wishes())->toHaveCount(3);
-});
+        $this->assertCount(3, $user->wishes());
+    }
+}
