@@ -10,10 +10,10 @@ use Illuminate\Support\Manager;
 
 final class WishlistManager extends Manager implements Wishlist
 {
-    public const ARRAY = 'array';
-    public const COOKIE = 'cookie';
-    public const ELOQUENT = 'eloquent';
-    public const UPGRADE = 'upgrade';
+    public const string ARRAY = 'array';
+    public const string COOKIE = 'cookie';
+    public const string ELOQUENT = 'eloquent';
+    public const string UPGRADE = 'upgrade';
 
     public function auth(): Guard
     {

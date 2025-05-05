@@ -6,6 +6,6 @@ trait Makeable
 {
     public static function make(...$arguments): static
     {
-        return new self(...$arguments);
+        return new static(...$arguments);
     }
 }

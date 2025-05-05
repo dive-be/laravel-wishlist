@@ -12,7 +12,7 @@ use Illuminate\Contracts\Support\Jsonable;
 use JsonSerializable;
 
 /**
- * @property string   $id
+ * @property string $id
  * @property Wishable $wishable
  */
 final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
@@ -28,7 +28,7 @@ final class Wish implements Arrayable, Jsonable, JsonSerializable, UrlRoutable
 
     public static function make(string $id, Wishable $wishable): self
     {
-        return (new self())->fill(compact('id', 'wishable'));
+        return new self()->fill(compact('id', 'wishable'));
     }
 
     public static function setManagerResolver(Closure $resolver): void

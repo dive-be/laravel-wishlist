@@ -25,7 +25,7 @@ final class MigrateWishesTest extends TestCase
         $this->assertCount(3, $cookie);
         $this->assertCount(0, $eloquent);
 
-        (new MigrateWishesAction($manager))->execute();
+        new MigrateWishesAction($manager)->execute();
 
         $this->assertCount(0, $cookie);
         $this->assertCount(3, $eloquent);

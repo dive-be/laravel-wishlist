@@ -2,21 +2,28 @@
 
 namespace Dive\Wishlist\Facades;
 
+use Closure;
+use Dive\Wishlist\Contracts\Wishable;
+use Dive\Wishlist\EloquentWishlist;
 use Dive\Wishlist\InMemoryWishlist;
+use Dive\Wishlist\Wish;
+use Dive\Wishlist\WishCollection;
+use Dive\Wishlist\WishlistManager;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Dive\Wishlist\Wish             add(\Dive\Wishlist\Contracts\Wishable $wishable)
- * @method static \Dive\Wishlist\WishCollection   all()
- * @method static int                             count()
- * @method static \Dive\Wishlist\WishlistManager  extend(string $driver, \Closure $callback)
- * @method static \Dive\Wishlist\EloquentWishlist forUser(\Illuminate\Contracts\Auth\Authenticatable $user)
- * @method static \Dive\Wishlist\Wish|null        find(string|\Dive\Wishlist\Contracts\Wishable $id)
- * @method static bool                            has(\Dive\Wishlist\Contracts\Wishable $wishable)
- * @method static bool                            isEmpty()
- * @method static bool                            isNotEmpty()
- * @method static int                             purge()
- * @method static bool                            remove(string|\Dive\Wishlist\Wish|\Dive\Wishlist\Contracts\Wishable $id)
+ * @method static Wish add(Wishable $wishable)
+ * @method static WishCollection all()
+ * @method static int count()
+ * @method static WishlistManager extend(string $driver, Closure $callback)
+ * @method static EloquentWishlist forUser(Authenticatable $user)
+ * @method static Wish|null find(string|Wishable $id)
+ * @method static bool has(Wishable $wishable)
+ * @method static bool isEmpty()
+ * @method static bool isNotEmpty()
+ * @method static int purge()
+ * @method static bool remove(string|Wish|Wishable $id)
  */
 final class Wishlist extends Facade
 {
